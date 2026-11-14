@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileDeleteRequest;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Models\EMPLEADO;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ class ProfileController extends Controller
     {
         return Inertia::render('settings/Profile', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'canDeleteProfile' => ! ($request->user() instanceof EMPLEADO),
             'status' => $request->session()->get('status'),
         ]);
     }
@@ -30,13 +32,20 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user instanceof EMPLEADO) {
+            $user->setAttribute('nombre', $validated['name']);
+        } else {
+            $user->fill($validated);
+
+            if ($user->isDirty('email')) {
+                $user->email_verified_at = null;
+            }
         }
 
-        $request->user()->save();
+        $user->save();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Profile updated.')]);
 
@@ -49,6 +58,8 @@ class ProfileController extends Controller
     public function destroy(ProfileDeleteRequest $request): RedirectResponse
     {
         $user = $request->user();
+
+        abort_if($user instanceof EMPLEADO, 403);
 
         Auth::logout();
 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Settings;
 
 use App\Concerns\ProfileValidationRules;
+use App\Models\EMPLEADO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ class ProfileUpdateRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        if (config('fortify.lowercase_usernames') && is_string($this->input('email'))) {
+        if (! ($this->user() instanceof EMPLEADO) && is_string($this->input('email'))) {
             $this->merge(['email' => Str::lower($this->input('email'))]);
         }
     }
@@ -28,6 +29,12 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        if ($this->user() instanceof EMPLEADO) {
+            return [
+                'name' => ['required', 'string', 'max:50'],
+            ];
+        }
+
         return $this->profileRules($this->user()->id);
     }
 }
