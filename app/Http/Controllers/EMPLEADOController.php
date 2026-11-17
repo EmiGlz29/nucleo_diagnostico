@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EMPLEADO;
 use App\Http\Requests\StoreEMPLEADORequest;
 use App\Http\Requests\UpdateEMPLEADORequest;
+use App\Models\EMPLEADO;
 
 class EMPLEADOController extends Controller
 {
@@ -39,7 +39,7 @@ class EMPLEADOController extends Controller
 
         // Redirigir con mensaje de éxito
         return redirect()->route('menu-principal')
-            ->with('success', 'Empleado ' . $empleado->nombre . ' agregado exitosamente.');
+            ->with('success', 'Empleado '.$empleado->nombre.' agregado exitosamente.');
     }
 
     /**
