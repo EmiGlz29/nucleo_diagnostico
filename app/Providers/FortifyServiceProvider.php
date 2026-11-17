@@ -7,7 +7,6 @@ use App\Actions\Fortify\ResetUserPassword;
 use App\Models\EMPLEADO;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -64,18 +63,8 @@ class FortifyServiceProvider extends ServiceProvider
                 return null;
             }
 
-            $isHashed = password_get_info($storedPassword)['algo'] !== null;
-            $passwordMatches = $isHashed
-                ? Hash::check($password, $storedPassword)
-                : hash_equals($storedPassword, $password);
-
-            if (! $passwordMatches) {
+            if (! hash_equals($storedPassword, $password)) {
                 return null;
-            }
-
-            if (! $isHashed) {
-                $empleado->setAttribute('contraseña', Hash::make($password));
-                $empleado->save();
             }
 
             return $empleado;

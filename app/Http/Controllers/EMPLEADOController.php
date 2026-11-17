@@ -21,7 +21,7 @@ class EMPLEADOController extends Controller
      */
     public function create()
     {
-        //
+        return view('EMPLEADOS.InsertarEmpleado');
     }
 
     /**
@@ -29,7 +29,15 @@ class EMPLEADOController extends Controller
      */
     public function store(StoreEMPLEADORequest $request)
     {
-        //
+        // Validar con el FormRequest
+        $validated = $request->validated();
+
+        // Crear el empleado (contraseña sin hashear)
+        $empleado = EMPLEADO::create($validated);
+
+        // Redirigir con mensaje de éxito
+        return redirect()->route('menu-principal')
+            ->with('success', 'Empleado ' . $empleado->nombre . ' agregado exitosamente.');
     }
 
     /**
@@ -57,7 +65,7 @@ class EMPLEADOController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource in storage.
      */
     public function destroy(EMPLEADO $eMPLEADO)
     {

@@ -98,6 +98,21 @@
             overflow-wrap: anywhere;
         }
 
+        .submenu{
+            display: none;
+            flex-direction: column;
+            padding-left: 16px;
+        }
+
+        .sidebar-item{
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-item:hover .submenu {
+            display: flex;
+        }
+
     </style>
 <body>
     <main class="main-content">
@@ -105,8 +120,13 @@
         <h2>Nucleo de diagnostico</h2>
     </main>
     <nav class="sidebar">
-        <a href="#Inicio" class="active">Inicio</a>
-        <a href="#Empleados">Empleados</a>
+        <a href="{{ route('menu-principal') }}" class="active">Inicio</a>
+        <div class="sidebar-item">
+            <a href="{{ route('empleados.create') }}">Empleados</a>
+            <div class="submenu">
+                <a href="{{ route('empleados.create') }}">Agregar Empleado</a>
+            </div>
+        </div>
         <a href="#Perfil">Perfil</a>
         <a href="#Configuración">Configuración</a>
         <a href="#CerrarSesion">Cerrar sesión</a>
