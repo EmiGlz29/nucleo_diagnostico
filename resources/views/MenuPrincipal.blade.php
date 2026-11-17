@@ -124,7 +124,8 @@
         <div class="sidebar-item">
             <a href="{{ route('empleados.create') }}">Empleados</a>
             <div class="submenu">
-                <a href="{{ route('empleados.create') }}">Agregar Empleado</a>
+                <a href="{{ route('empleados.create') }}">Agregar Empleados</a>
+                <a href="{{ route('empleados.index') }}">Consultas Generales</a>
             </div>
         </div>
         <a href="#Perfil">Perfil</a>

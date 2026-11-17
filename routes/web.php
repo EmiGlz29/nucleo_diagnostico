@@ -11,6 +11,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Rutas para empleados
     Route::get('/empleados/crear', [\App\Http\Controllers\EMPLEADOController::class, 'create'])->name('empleados.create');
     Route::post('/empleados', [\App\Http\Controllers\EMPLEADOController::class, 'store'])->name('empleados.store');
+
+    Route::get('/empleados/mostrar', [\App\Http\Controllers\EMPLEADOController::class, 'index'])->name('empleados.index');
 });
 
 require __DIR__.'/settings.php';

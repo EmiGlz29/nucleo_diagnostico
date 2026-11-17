@@ -6,12 +6,12 @@
     <title>Insertar Empleado</title>
     <style>
         body {
-            background-image: url('{{ asset('NDBackground.png') }}');
+            /* background-image: url('{{ asset('NDBackground.png') }}');
             background-position: calc(50% + 120px) center;
             background-repeat: no-repeat;
             background-size: cover;
             background-attachment: fixed;
-            min-height: 100vh;
+            min-height: 100vh; */
             margin: 0;
             font-family: Arial, sans-serif;
         }
@@ -217,11 +217,7 @@
 
                     <div class="form-group">
                         <label for="sexo">Sexo:</label>
-                        <select id="sexo" name="sexo" required>
-                            <option value="">Seleccionar</option>
-                            <option value="M" {{ old('sexo') === 'M' ? 'selected' : '' }}>Masculino</option>
-                            <option value="F" {{ old('sexo') === 'F' ? 'selected' : '' }}>Femenino</option>
-                        </select>
+                        <input type="varchar" id="sexo" name="sexo" value="{{ old('sexo') }}" required>
                         @error('sexo') <span class="error-message">{{ $message }}</span> @enderror
                     </div>
                 </div>

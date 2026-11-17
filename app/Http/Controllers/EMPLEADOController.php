@@ -13,7 +13,9 @@ class EMPLEADOController extends Controller
      */
     public function index()
     {
-        //
+        $empleados = EMPLEADO::all();
+
+        return view('EMPLEADOS.MostrarEmpleado', compact('empleados'));
     }
 
     /**
@@ -45,7 +47,7 @@ class EMPLEADOController extends Controller
      */
     public function show(EMPLEADO $eMPLEADO)
     {
-        //
+        return view('EMPLEADOS.MostrarEmpleado', ['empleado' => $eMPLEADO]);
     }
 
     /**
