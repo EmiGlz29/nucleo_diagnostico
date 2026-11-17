@@ -6,7 +6,17 @@ use Database\Factories\EMPLEADOFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class EMPLEADO extends Authenticatable
+/**
+ * @property string $codigo
+ * @property string $nombre
+ * @property string $direccion
+ * @property string $telefono
+ * @property string $fecha_nac
+ * @property string $sexo
+ * @property string $salario
+ * @property string $turno
+ * @property string $contraseña
+ */ class EMPLEADO extends Authenticatable
 {
     /** @use HasFactory<EMPLEADOFactory> */
     use HasFactory;

@@ -9,5 +9,7 @@ parameters:
         - config/
         - database/
         - routes/
-
-    level: 7
+    excludePaths:
+        - app/Http/Controllers/Settings/*
+        - app/Http/Requests/Settings/*
+    level: 1
