@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Models\EMPLEADO;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -30,8 +31,44 @@ class FortifyServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureActions();
+        $this->configureAuthentication();
         $this->configureViews();
         $this->configureRateLimiting();
+    }
+
+    /**
+     * Configure authentication against existing employee records.
+     */
+    private function configureAuthentication(): void
+    {
+        Fortify::authenticateUsing(function (Request $request): ?EMPLEADO {
+            $nombre = $request->input(Fortify::username());
+            $password = $request->input('password');
+
+            if (! is_string($nombre) || ! is_string($password)) {
+                return null;
+            }
+
+            $empleado = EMPLEADO::query()
+                ->where('nombre', $nombre)
+                ->first();
+
+            if (! $empleado) {
+                return null;
+            }
+
+            $storedPassword = $empleado->getAttribute('contraseña');
+
+            if (! is_string($storedPassword)) {
+                return null;
+            }
+
+            if (! hash_equals($storedPassword, $password)) {
+                return null;
+            }
+
+            return $empleado;
+        });
     }
 
     /**

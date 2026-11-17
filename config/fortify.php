@@ -1,7 +1,5 @@
 <?php
 
-use Laravel\Fortify\Features;
-
 return [
 
     /*
@@ -45,7 +43,7 @@ return [
     |
     */
 
-    'username' => 'email',
+    'username' => 'nombre',
 
     'email' => 'email',
 
@@ -60,7 +58,7 @@ return [
     |
     */
 
-    'lowercase_usernames' => true,
+    'lowercase_usernames' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -73,7 +71,7 @@ return [
     |
     */
 
-    'home' => '/dashboard',
+    'home' => '/menu-principal',
 
     /*
     |--------------------------------------------------------------------------
@@ -160,18 +158,6 @@ return [
     |
     */
 
-    'features' => [
-        Features::registration(),
-        Features::resetPasswords(),
-        Features::emailVerification(),
-        Features::twoFactorAuthentication([
-            'confirm' => true,
-            'confirmPassword' => true,
-            // 'window' => 0
-        ]),
-        Features::passkeys([
-            'confirmPassword' => true,
-        ]),
-    ],
+    'features' => [],
 
 ];
