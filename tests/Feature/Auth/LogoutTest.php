@@ -11,6 +11,12 @@ beforeEach(function () {
         $table->string('contraseña');
         $table->rememberToken();
     });
+
+    Schema::create('Administrador', function (Blueprint $table) {
+        $table->integer('codigo')->primary();
+        $table->string('nombre');
+        $table->string('contraseña');
+    });
 });
 
 test('the main menu submits a protected logout request', function () {

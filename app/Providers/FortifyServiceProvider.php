@@ -39,51 +39,46 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure authentication against existing employee records.
+     * Configure authentication against administrator and employee records.
      */
     private function configureAuthentication(): void
     {
         Fortify::authenticateUsing(function (Request $request): EMPLEADO|Administrador|null {
             $nombre = $request->input(Fortify::username());
             $password = $request->input('password');
-            $type = $request->input('tipo_cuenta', 'empleado');
-
-            if (! is_string($nombre) || ! is_string($password) || ! in_array($type, ['empleado', 'administrador'], true)) {
+            if (! is_string($nombre) || ! is_string($password)) {
                 return null;
             }
 
-            $user = ($type === 'administrador' ? Administrador::query() : EMPLEADO::query())
-                ->where('nombre', $nombre)
-                ->first();
+            foreach ([Administrador::class, EMPLEADO::class] as $model) {
+                $user = $model::query()->where('nombre', $nombre)->first();
+                $storedPassword = $user?->getAttribute('contraseña');
 
-            if (! $user) {
-                return null;
+                if (! is_string($storedPassword)) {
+                    continue;
+                }
+
+                $hashed = password_get_info($storedPassword)['algo'] !== null;
+
+                if ($hashed ? ! Hash::check($password, $storedPassword) : ! hash_equals($storedPassword, $password)) {
+                    continue;
+                }
+
+                if ($user instanceof Administrador) {
+                    if (! $hashed) {
+                        $user->setAttribute('contraseña', Hash::make($password));
+                        $user->save();
+                    }
+
+                    $request->merge(['remember' => false]);
+                }
+
+                $request->session()->put('auth.account_type', $user instanceof Administrador ? 'administrador' : 'empleado');
+
+                return $user;
             }
 
-            $storedPassword = $user->getAttribute('contraseña');
-
-            if (! is_string($storedPassword)) {
-                return null;
-            }
-
-            $hashed = password_get_info($storedPassword)['algo'] !== null;
-
-            if ($hashed ? ! Hash::check($password, $storedPassword) : ! hash_equals($storedPassword, $password)) {
-                return null;
-            }
-
-            if ($user instanceof Administrador && ! $hashed) {
-                $user->setAttribute('contraseña', Hash::make($password));
-                $user->save();
-            }
-
-            if ($user instanceof Administrador) {
-                $request->merge(['remember' => false]);
-            }
-
-            $request->session()->put('auth.account_type', $type);
-
-            return $user;
+            return null;
         });
     }
 

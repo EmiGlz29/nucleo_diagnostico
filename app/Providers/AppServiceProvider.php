@@ -27,6 +27,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (app()->environment('local')){
+            DB::listen(function ($query) {
+                logger()->info($query->sql);
+            });
+        }
+
         $this->configureDefaults();
 
         Auth::provider('accounts', fn ($app, array $config) => new AccountUserProvider(

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\EMPLEADOController;
+use App\Http\Controllers\PacienteController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login')->name('home');
@@ -21,6 +22,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/doctores', [DoctorController::class, 'store'])->middleware('can:gestionar-altas')->name('doctores.store');
 
     Route::get('/doctores/mostrar', [DoctorController::class, 'index'])->name('doctores.index');
+
+    //Rutas para pacientes
+    Route::get('/pacientes/crear', [PacienteController::class, 'create'])->name('pacientes.create');
+    Route::post('/pacientes', [PacienteController::class, 'store'])->name('pacientes.store');
+
+    Route::get('/pacientes/mostrar', [PacienteController::class, 'index'])->name('pacientes.index');
 });
 
 require __DIR__.'/settings.php';

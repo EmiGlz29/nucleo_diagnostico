@@ -148,6 +148,13 @@
                 <a href="{{ route('doctores.index') }}">Consultas Generales</a>
             </div>
         </div>
+        <div class="sidebar-item">
+            <a href="{{ route('pacientes.index') }}">Pacientes</a>
+            <div class="submenu">
+                <a href="{{ route('pacientes.create') }}">Agregar Paciente</a>
+                <a href="{{ route('pacientes.index') }}">Consultas Generales</a>
+            </div>
+        </div>
         <a href="#Perfil">Perfil</a>
         <a href="#Configuración">Configuración</a>
         <form method="POST" action="{{ route('logout') }}">

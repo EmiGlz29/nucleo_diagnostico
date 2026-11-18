@@ -38,14 +38,6 @@ defineProps<{
     >
         <div class="grid gap-6">
             <div class="grid gap-2">
-                <Label for="tipo_cuenta">Tipo de cuenta</Label>
-                <select id="tipo_cuenta" name="tipo_cuenta" class="rounded-md border px-3 py-2" required>
-                    <option value="empleado">Empleado</option>
-                    <option value="administrador">Administrador</option>
-                </select>
-                <InputError :message="errors.tipo_cuenta" />
-            </div>
-            <div class="grid gap-2">
                 <Label for="nombre">Nombre de Administrador/Empleado</Label>
                 <Input
                     id="nombre"
