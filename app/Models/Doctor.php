@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Database\Factories\DoctorFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -16,8 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string $sexo
  * @property string $especialidad
  * @property string $contraseña
- */ 
-
+ */
 class Doctor extends Authenticatable
 {
     /** @use HasFactory<DoctorFactory> */

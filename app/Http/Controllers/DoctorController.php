@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDoctorRequest;
-use App\Http\Requests\UpdateDoctorRequest;
 use App\Models\Doctor;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class DoctorController extends Controller
@@ -17,6 +16,7 @@ class DoctorController extends Controller
     public function index(): View
     {
         $doctores = Doctor::all();
+
         return view('DOCTORES.MostrarDoctor', compact('doctores'));
     }
 
@@ -35,6 +35,7 @@ class DoctorController extends Controller
     {
         $validated = $request->validated();
         $doctor = Doctor::create($validated);
+
         return redirect()->route('doctores.index');
     }
 
@@ -49,7 +50,7 @@ class DoctorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Doctor $doctor):void
+    public function edit(Doctor $doctor): void
     {
         //
     }
@@ -57,7 +58,7 @@ class DoctorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Doctor $doctor):void
+    public function update(Request $request, Doctor $doctor): void
     {
         //
     }
@@ -65,7 +66,7 @@ class DoctorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Doctor $doctor):void
+    public function destroy(Doctor $doctor): void
     {
         //
     }

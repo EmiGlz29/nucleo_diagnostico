@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\EMPLEADOController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\EMPLEADOController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login')->name('home');
