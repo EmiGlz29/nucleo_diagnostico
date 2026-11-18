@@ -73,7 +73,7 @@
     <nav class="sidebar">
         <a href="{{ route('menu-principal') }}">Inicio</a>
         <div style="margin-top: 20px;">
-            <a href="{{ route('menu-principal') }}" style="border-radius: 0;">Empleados</a>
+            <a href="{{ route('menu-principal') }}" style="border-radius: 0;">Doctores</a>
         </div>
     </nav>
         <div class="container">
