@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\EMPLEADOController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/empleados', [EMPLEADOController::class, 'store'])->name('empleados.store');
 
     Route::get('/empleados/mostrar', [EMPLEADOController::class, 'index'])->name('empleados.index');
+
+    // Rutas para Doctores
+    Route::get('/doctores/crear', [DoctorController::class, 'create'])->name('doctores.create');
+    Route::post('/doctores', [DoctorController::class, 'store'])->name('doctores.store');
+
+    Route::get('/doctores/mostrar', [DoctorController::class, 'index'])->name('doctores.index');
 });
 
 require __DIR__.'/settings.php';

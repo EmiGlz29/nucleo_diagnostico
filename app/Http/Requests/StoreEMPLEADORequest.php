@@ -28,7 +28,7 @@ class StoreEMPLEADORequest extends FormRequest
             'direccion' => 'required|string|max:255',
             'telefono' => 'required|string|max:20',
             'fecha_nac' => 'required|date',
-            'sexo' => 'required|in:M,F',
+            'sexo' => 'required',
             'salario' => 'required|numeric|min:0',
             'turno' => 'required|string|max:50',
             'contraseña' => 'required|string|min:6',

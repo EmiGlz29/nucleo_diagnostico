@@ -128,6 +128,13 @@
                 <a href="{{ route('empleados.index') }}">Consultas Generales</a>
             </div>
         </div>
+        <div class="sidebar-item">
+            <a href="{{ route('doctores.create') }}">Doctores</a>
+            <div class="submenu">
+                <a href="{{ route('doctores.create') }}">Agregar Doctores</a>
+                <a href="{{ route('doctores.index') }}">Consultas Generales</a>
+            </div>
+        </div>
         <a href="#Perfil">Perfil</a>
         <a href="#Configuración">Configuración</a>
         <a href="#CerrarSesion">Cerrar sesión</a>

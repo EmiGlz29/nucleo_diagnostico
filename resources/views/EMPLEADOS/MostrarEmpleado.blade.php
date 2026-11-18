@@ -65,7 +65,7 @@
         td{
             background-color: #ACB7FA;
             padding: 12px 15px;
-            font-size: 16px;
+            font-size: 14px;
             border-bottom: 3px solid #2B3A78;
             text-align: center;
         }
