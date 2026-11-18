@@ -11,14 +11,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('menu-principal', 'MenuPrincipal')->name('menu-principal');
 
     // Rutas para empleados
-    Route::get('/empleados/crear', [EMPLEADOController::class, 'create'])->name('empleados.create');
-    Route::post('/empleados', [EMPLEADOController::class, 'store'])->name('empleados.store');
+    Route::get('/empleados/crear', [EMPLEADOController::class, 'create'])->middleware('can:gestionar-altas')->name('empleados.create');
+    Route::post('/empleados', [EMPLEADOController::class, 'store'])->middleware('can:gestionar-altas')->name('empleados.store');
 
     Route::get('/empleados/mostrar', [EMPLEADOController::class, 'index'])->name('empleados.index');
 
     // Rutas para Doctores
-    Route::get('/doctores/crear', [DoctorController::class, 'create'])->name('doctores.create');
-    Route::post('/doctores', [DoctorController::class, 'store'])->name('doctores.store');
+    Route::get('/doctores/crear', [DoctorController::class, 'create'])->middleware('can:gestionar-altas')->name('doctores.create');
+    Route::post('/doctores', [DoctorController::class, 'store'])->middleware('can:gestionar-altas')->name('doctores.store');
 
     Route::get('/doctores/mostrar', [DoctorController::class, 'index'])->name('doctores.index');
 });

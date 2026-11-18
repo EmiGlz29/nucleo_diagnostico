@@ -63,7 +63,7 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
+            'driver' => 'accounts',
             'model' => EMPLEADO::class,
         ],
 

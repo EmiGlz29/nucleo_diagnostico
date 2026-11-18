@@ -62,11 +62,12 @@
             gap: 8px;
         }
 
-        .sidebar a{
+        .sidebar a, .sidebar button{
             text-decoration: none;
             color: #121629;
             padding: 12px 16px;
             border-radius: 24px;
+            font-family: inherit;
             font-size: 16px;
             font-weight: bold;
             display: flex;
@@ -75,7 +76,15 @@
             transition: background-color 0.2s;
         }
 
-        .sidebar a:hover{
+        .sidebar button{
+            width: 100%;
+            border: 0;
+            background: none;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .sidebar a:hover, .sidebar button:hover{
             background-color: #7C99D9;
         }
 
@@ -122,22 +131,29 @@
     <nav class="sidebar">
         <a href="{{ route('menu-principal') }}" class="active">Inicio</a>
         <div class="sidebar-item">
-            <a href="{{ route('empleados.create') }}">Empleados</a>
+            <a href="{{ route('empleados.index') }}">Empleados</a>
             <div class="submenu">
+                @can('gestionar-altas')
                 <a href="{{ route('empleados.create') }}">Agregar Empleados</a>
+                @endcan
                 <a href="{{ route('empleados.index') }}">Consultas Generales</a>
             </div>
         </div>
         <div class="sidebar-item">
-            <a href="{{ route('doctores.create') }}">Doctores</a>
+            <a href="{{ route('doctores.index') }}">Doctores</a>
             <div class="submenu">
+                @can('gestionar-altas')
                 <a href="{{ route('doctores.create') }}">Agregar Doctores</a>
+                @endcan
                 <a href="{{ route('doctores.index') }}">Consultas Generales</a>
             </div>
         </div>
         <a href="#Perfil">Perfil</a>
         <a href="#Configuración">Configuración</a>
-        <a href="#CerrarSesion">Cerrar sesión</a>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit">Cerrar sesión</button>
+        </form>
         <div class="sidebar-user">
             <span>Conectado como:</span>
             <strong>{{ Auth::user()->name }}</strong>

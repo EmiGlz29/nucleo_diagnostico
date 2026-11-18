@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Models\Administrador;
 use App\Models\EMPLEADO;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
@@ -41,33 +43,47 @@ class FortifyServiceProvider extends ServiceProvider
      */
     private function configureAuthentication(): void
     {
-        Fortify::authenticateUsing(function (Request $request): ?EMPLEADO {
+        Fortify::authenticateUsing(function (Request $request): EMPLEADO|Administrador|null {
             $nombre = $request->input(Fortify::username());
             $password = $request->input('password');
+            $type = $request->input('tipo_cuenta', 'empleado');
 
-            if (! is_string($nombre) || ! is_string($password)) {
+            if (! is_string($nombre) || ! is_string($password) || ! in_array($type, ['empleado', 'administrador'], true)) {
                 return null;
             }
 
-            $empleado = EMPLEADO::query()
+            $user = ($type === 'administrador' ? Administrador::query() : EMPLEADO::query())
                 ->where('nombre', $nombre)
                 ->first();
 
-            if (! $empleado) {
+            if (! $user) {
                 return null;
             }
 
-            $storedPassword = $empleado->getAttribute('contraseña');
+            $storedPassword = $user->getAttribute('contraseña');
 
             if (! is_string($storedPassword)) {
                 return null;
             }
 
-            if (! hash_equals($storedPassword, $password)) {
+            $hashed = password_get_info($storedPassword)['algo'] !== null;
+
+            if ($hashed ? ! Hash::check($password, $storedPassword) : ! hash_equals($storedPassword, $password)) {
                 return null;
             }
 
-            return $empleado;
+            if ($user instanceof Administrador && ! $hashed) {
+                $user->setAttribute('contraseña', Hash::make($password));
+                $user->save();
+            }
+
+            if ($user instanceof Administrador) {
+                $request->merge(['remember' => false]);
+            }
+
+            $request->session()->put('auth.account_type', $type);
+
+            return $user;
         });
     }
 

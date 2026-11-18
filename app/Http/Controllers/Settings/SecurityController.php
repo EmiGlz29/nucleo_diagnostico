@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\PasswordUpdateRequest;
 use App\Http\Requests\Settings\TwoFactorAuthenticationRequest;
+use App\Models\Administrador;
 use App\Models\EMPLEADO;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
@@ -58,7 +59,7 @@ class SecurityController extends Controller
     public function update(PasswordUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $passwordAttribute = $user instanceof EMPLEADO ? 'contraseña' : 'password';
+        $passwordAttribute = $user instanceof EMPLEADO || $user instanceof Administrador ? 'contraseña' : 'password';
 
         $user->setAttribute($passwordAttribute, Hash::make($request->password));
         $user->save();

@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+use App\Auth\AccountUserProvider;
+use App\Models\Administrador;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -24,6 +28,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+
+        Auth::provider('accounts', fn ($app, array $config) => new AccountUserProvider(
+            $app['hash'],
+            $config['model'],
+        ));
+
+        Gate::define('gestionar-altas', fn ($user): bool => $user instanceof Administrador);
     }
 
     /**

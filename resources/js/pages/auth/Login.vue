@@ -10,7 +10,7 @@ import { store } from '@/routes/login';
 
 defineOptions({
     layout: {
-        title: 'Inicia sesion con tu cuenta de Empleado',
+        title: 'Inicia sesion con tu cuenta de Administrador/Empleado',
         description: 'Ingresa tu usuario y contraseña para acceder al sistema',
     },
 });
@@ -38,7 +38,15 @@ defineProps<{
     >
         <div class="grid gap-6">
             <div class="grid gap-2">
-                <Label for="nombre">Nombre de empleado</Label>
+                <Label for="tipo_cuenta">Tipo de cuenta</Label>
+                <select id="tipo_cuenta" name="tipo_cuenta" class="rounded-md border px-3 py-2" required>
+                    <option value="empleado">Empleado</option>
+                    <option value="administrador">Administrador</option>
+                </select>
+                <InputError :message="errors.tipo_cuenta" />
+            </div>
+            <div class="grid gap-2">
+                <Label for="nombre">Nombre de Administrador/Empleado</Label>
                 <Input
                     id="nombre"
                     type="text"
@@ -47,7 +55,7 @@ defineProps<{
                     v-focus
                     :tabindex="1"
                     autocomplete="username"
-                    placeholder="Nombre de empleado"
+                    placeholder="Nombre"
                 />
                 <InputError :message="errors.nombre" />
             </div>
