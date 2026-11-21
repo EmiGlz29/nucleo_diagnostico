@@ -94,9 +94,8 @@
         }
 
         .sidebar-user{
-            margin-top: auto;
             padding: 12px 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
             color: #ffffff;
             font-size: 14px;
         }
@@ -129,6 +128,9 @@
         <h2>Nucleo de diagnostico</h2>
     </main>
     <nav class="sidebar">
+        <div class="sidebar-user">
+            <span>Hola! <strong>{{ Auth::user()->name }}</strong> </span>
+        </div>
         <a href="{{ route('menu-principal') }}" class="active">Inicio</a>
         <div class="sidebar-item">
             <a href="{{ route('empleados.index') }}">Empleados</a>
@@ -161,10 +163,6 @@
             @csrf
             <button type="submit">Cerrar sesión</button>
         </form>
-        <div class="sidebar-user">
-            <span>Conectado como:</span>
-            <strong>{{ Auth::user()->name }}</strong>
-        </div>
     </nav>
 </body>
 </html>

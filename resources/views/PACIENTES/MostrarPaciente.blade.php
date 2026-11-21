@@ -97,8 +97,8 @@
                     <td>{{ $paciente->telefono }}</td>
                     <td>{{ $paciente->fecha_nac }}</td>
                     <td>{{ $paciente->sexo }}</td>
-                    <td>{{ $paciente->salario }}</td>
-                    <td>{{ $paciente->turno }}</td>
+                    <td>{{ $paciente->edad }}</td>
+                    <td>{{ $paciente->estatura }}</td>
                 </tr>
             @endforeach
         </table>
