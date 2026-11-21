@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
         if (app()->environment('local')){
             DB::listen(function ($query) {
-                logger()->info($query->sql);
+                logger()->info($query->toRawSql());
             });
         }
 

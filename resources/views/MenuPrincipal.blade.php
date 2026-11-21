@@ -490,8 +490,15 @@
             </div>
         </section>
     </main>
+<<<<<<< HEAD
+    <nav class="sidebar">
+        <div class="sidebar-user">
+            <span>Hola! <strong>{{ Auth::user()->name }}</strong> </span>
+        </div>
+=======
 
     <nav class="sidebar" aria-label="Navegación principal">
+>>>>>>> main
         <a href="{{ route('menu-principal') }}" class="active">Inicio</a>
         <div class="sidebar-item">
             <a href="{{ route('empleados.index') }}">Empleados</a>
@@ -524,10 +531,6 @@
             @csrf
             <button type="submit">Cerrar sesión</button>
         </form>
-        <div class="sidebar-user">
-            <span>Conectado como:</span>
-            <strong>{{ Auth::user()->name }}</strong>
-        </div>
     </nav>
 </body>
 </html>
