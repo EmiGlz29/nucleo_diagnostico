@@ -145,9 +145,8 @@
         }
 
         .sidebar-user {
-            margin-top: auto;
-            padding: 16px 12px 4px;
-            border-top: 1px solid rgba(255, 255, 255, .2);
+            padding: 0 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .2);
             color: rgba(255, 255, 255, .72);
             font-size: 13px;
         }
@@ -490,15 +489,11 @@
             </div>
         </section>
     </main>
-<<<<<<< HEAD
-    <nav class="sidebar">
+
+    <nav class="sidebar" aria-label="Navegación principal">
         <div class="sidebar-user">
             <span>Hola! <strong>{{ Auth::user()->name }}</strong> </span>
         </div>
-=======
-
-    <nav class="sidebar" aria-label="Navegación principal">
->>>>>>> main
         <a href="{{ route('menu-principal') }}" class="active">Inicio</a>
         <div class="sidebar-item">
             <a href="{{ route('empleados.index') }}">Empleados</a>
