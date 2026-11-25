@@ -19,6 +19,11 @@ class CitaController extends Controller
 {
     private const SQL_AGENDA = 'SELECT c.codigocita, c.codigopaciente, c.codigodoctor, c.fechacita, c.hora, p.nombre AS paciente FROM "cita" c JOIN "Paciente" p ON p.codigo = c.codigopaciente WHERE c.codigodoctor = ? AND c.fechacita BETWEEN ? AND ? ORDER BY c.fechacita, c.hora';
 
+    public function index(): View
+    {
+        return $this->form();
+    }
+
     public function create(): View
     {
         return $this->form();
