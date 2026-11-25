@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar paciente | San Mariscal</title>
+    <title>Agregar paciente | San Miguel</title>
     <link rel="stylesheet" href="{{ asset('management.css') }}">
 </head>
 <body>
@@ -35,7 +35,7 @@
     <main class="container">
         <header class="page-header">
             <div>
-                <p class="eyebrow">Núcleo de Diagnóstico · San Mariscal</p>
+                <p class="eyebrow">Núcleo de Diagnóstico · San Miguel</p>
                 <h1>Agregar paciente</h1>
                 <p class="page-description">Registra los datos personales y medidas del paciente.</p>
             </div>

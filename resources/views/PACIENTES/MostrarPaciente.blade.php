@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pacientes | San Mariscal</title>
+    <title>Pacientes | San Miguel</title>
     <link rel="stylesheet" href="{{ asset('management.css') }}">
 </head>
 <body>
@@ -35,7 +35,7 @@
     <main class="container">
         <header class="page-header">
             <div>
-                <p class="eyebrow">Núcleo de Diagnóstico · San Mariscal</p>
+                <p class="eyebrow">Núcleo de Diagnóstico · San Miguel</p>
                 <h1>Pacientes</h1>
                 <p class="page-description">{{ $pacientes->count() }} {{ $pacientes->count() === 1 ? 'registro' : 'registros' }} en el directorio.</p>
             </div>

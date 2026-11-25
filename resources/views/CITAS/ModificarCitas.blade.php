@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Modificar Cita | San Mariscal</title>
+    <title>Modificar Cita | San Miguel</title>
     <link rel="stylesheet" href="{{ asset('management.css') }}">
     <style>
         .modification-form {
@@ -175,6 +175,7 @@
                 <div class="form-group">
                     <label for="codigopaciente">Paciente:</label>
                     <input type="text" id="codigopaciente" value="{{ $cita->paciente->nombre }} (Código: {{ $cita->codigopaciente }})" readonly class="readonly-field">
+                    <input type="hidden" name="codigopaciente" value="{{ $cita->codigopaciente }}">
                 </div>
 
                 <div class="form-group">
