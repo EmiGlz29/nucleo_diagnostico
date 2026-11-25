@@ -6,6 +6,7 @@ use Date;
 use Illuminate\Database\Eloquent\Model;
 use Database\Factories\CitaFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property integer $codigocita
  * @property integer $codigopaciente
@@ -18,6 +19,7 @@ class Cita extends Model
 {
     /** @use HasFactory<CitaFactory> */
     use HasFactory;
+
     protected $table = 'Cita';
     protected $foreignKey = 'codigopaciente';
     protected $foreignKeyDoctor = 'codigodoctor';
@@ -46,4 +48,18 @@ class Cita extends Model
         'name',
     ];
 
+    public function paciente(): BelongsTo
+    {
+        return $this->belongsTo(Paciente::class, 'codigopaciente', 'codigo');
+    }
+
+    public function doctor(): BelongsTo
+    {
+        return $this->belongsTo(Doctor::class, 'codigodoctor', 'codigo');
+    }
+
+    public function empleado(): BelongsTo
+    {
+        return $this->belongsTo(EMPLEADO::class, 'codigoempleado', 'codigo');
+    }
 }

@@ -22,7 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Rutas para Doctores
     Route::get('/doctores/crear', [DoctorController::class, 'create'])->middleware('can:gestionar-altas')->name('doctores.create');
     Route::post('/doctores', [DoctorController::class, 'store'])->middleware('can:gestionar-altas')->name('doctores.store');
-
+    Route::get('doctores/{doctor}/agenda', [DoctorController::class, 'agenda'])->name('doctores.agenda');
     Route::get('/doctores/mostrar', [DoctorController::class, 'index'])->name('doctores.index');
 
     //Rutas para pacientes
@@ -34,7 +34,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //Rutas para citas
     Route::get('/citas/crear', [CitaController::class, 'create'])->name('citas.create');
     Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
-
     Route::get('/citas/mostrar', [CitaController::class, 'index'])->name('citas.index');
 });
 

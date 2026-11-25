@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctores | San Mariscal</title>
+    <title>Doctores | Núcleo de Diagnóstico</title>
     <link rel="stylesheet" href="{{ asset('management.css') }}">
 </head>
 <body>
@@ -52,6 +52,7 @@
                         <th scope="col">Fecha de nacimiento</th>
                         <th scope="col">Sexo</th>
                         <th scope="col">Especialidad</th>
+                        <th scope="col">Agenda</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,9 +65,10 @@
                             <td>{{ $doctor->fecha_nac }}</td>
                             <td>{{ $doctor->sexo }}</td>
                             <td>{{ $doctor->especialidad }}</td>
+                            <td><a class="btn" href="{{ route('doctores.agenda', $doctor) }}">Agenda</a></td>
                         </tr>
                     @empty
-                        <tr><td class="empty-state" colspan="7">Todavía no hay doctores registrados.</td></tr>
+                        <tr><td class="empty-state" colspan="8">Todavía no hay doctores registrados.</td></tr>
                     @endforelse
                 </tbody>
             </table>
