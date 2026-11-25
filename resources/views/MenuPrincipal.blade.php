@@ -531,7 +531,7 @@
         <a href="#Configuración">Configuración</a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-            <button type="submit">Cerrar sesión</button>
+            <button type="submit" class="sidebar-logout">Cerrar sesión</button>
         </form>
     </nav>
 </body>

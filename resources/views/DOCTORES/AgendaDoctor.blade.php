@@ -37,16 +37,13 @@
             <div>
                 <p class="eyebrow">Núcleo de Diagnóstico</p>
                 <h1>Agenda del doctor {{ $doctor->nombre }}</h1>
-                <p class="page-description">
-                    <a href="{{ route('doctores.index') }}">Volver a doctores</a>
-                </p>
             </div>
+            <a class="button button-secondary" href="{{ route('doctores.index') }}">Volver a doctores</a>
         </header>
 
-        <nav class="page-description" aria-label="Cambiar semana">
-            <a href="{{ route('doctores.agenda', ['doctor' => $doctor, 'semana' => $semanaAnterior]) }}">« Semana anterior</a>
-            |
-            <a href="{{ route('doctores.agenda', ['doctor' => $doctor, 'semana' => $semanaSiguiente]) }}">Semana siguiente »</a>
+        <nav class="button-group agenda-navigation" aria-label="Cambiar semana">
+            <a class="button button-secondary" href="{{ route('doctores.agenda', ['doctor' => $doctor, 'semana' => $semanaAnterior]) }}">« Semana anterior</a>
+            <a class="button button-secondary" href="{{ route('doctores.agenda', ['doctor' => $doctor, 'semana' => $semanaSiguiente]) }}">Semana siguiente »</a>
         </nav>
 
         <div class="table-wrap">

@@ -66,7 +66,7 @@
                             <td>{{ $doctor->fecha_nac }}</td>
                             <td>{{ $doctor->sexo }}</td>
                             <td>{{ $doctor->especialidad }}</td>
-                            <td><a class="btn" href="{{ route('doctores.agenda', $doctor) }}">Agenda</a></td>
+                            <td><a class="button button-secondary button-small" href="{{ route('doctores.agenda', $doctor) }}">Agenda</a></td>
                         </tr>
                     @empty
                         <tr><td class="empty-state" colspan="8">Todavía no hay doctores registrados.</td></tr>

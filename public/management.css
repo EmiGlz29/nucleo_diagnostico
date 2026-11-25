@@ -70,6 +70,7 @@ body {
 
 .sidebar a:focus-visible,
 .button:focus-visible,
+button:focus-visible,
 input:focus-visible {
     outline: 3px solid #78bfe0;
     outline-offset: 3px;
@@ -243,6 +244,19 @@ input:focus-visible {
     border-color: #d7e2ec;
     background: #f2f6fa;
     color: #304766;
+}
+
+.button-small {
+    min-height: 36px;
+    padding: 8px 13px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.agenda-navigation {
+    max-width: 1120px;
+    justify-content: space-between;
+    margin: 0 auto 24px;
 }
 
 .alert {
@@ -509,6 +523,12 @@ input:focus-visible {
     font-size: 24px;
     line-height: 1;
     cursor: pointer;
+}
+
+.calendar-nav:hover {
+    transform: translateY(-1px);
+    border-color: #53a9ce;
+    background: #edf8fc;
 }
 
 .calendar-grid {
