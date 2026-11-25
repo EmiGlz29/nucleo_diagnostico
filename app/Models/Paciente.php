@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Paciente extends Model
 {
@@ -43,5 +44,10 @@ class Paciente extends Model
     public function getNameAttribute(): string
     {
         return $this->nombre;
+    }
+
+    public function citas(): HasMany
+    {
+        return $this->hasMany(Cita::class, 'codigopaciente', 'codigo');
     }
 }

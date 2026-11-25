@@ -492,7 +492,7 @@
 
     <nav class="sidebar" aria-label="Navegación principal">
         <div class="sidebar-user">
-            <span>Hola! <strong>{{ Auth::user()->name }}</strong> </span>
+            <span>Hola, <strong>{{ explode(' ', Auth::user()->name)[0] }}</strong></span>
         </div>
         <a href="{{ route('menu-principal') }}" class="active">Inicio</a>
         <div class="sidebar-item">
@@ -511,6 +511,13 @@
                     <a href="{{ route('doctores.create') }}">Agregar Doctores</a>
                 @endcan
                 <a href="{{ route('doctores.index') }}">Consultas generales</a>
+            </div>
+        </div>
+        <div class="sidebar-item">
+            <a href="{{ route('citas.create') }}">Citas</a>
+            <div class="submenu">
+                <a href="{{ route('citas.create') }}">Registrar cita</a>
+                <a href="{{ route('citas.create') }}">Ver agenda</a>
             </div>
         </div>
         <div class="sidebar-item">

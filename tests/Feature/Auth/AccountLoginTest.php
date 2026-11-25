@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
+    Schema::dropIfExists('cita');
+    Schema::dropIfExists('Paciente');
+    Schema::dropIfExists('Doctor');
+    Schema::dropIfExists('Empleado');
+    Schema::dropIfExists('Administrador');
+
     Schema::create('Empleado', function (Blueprint $table) {
         $table->integer('codigo')->primary();
         $table->string('nombre');
@@ -104,6 +110,27 @@ test('employee login does not inherit administrator permissions with the same co
     ])->assertRedirect(route('menu-principal'));
 
     $this->assertDatabaseHas('Paciente', ['codigo' => 42, 'nombre' => 'Paciente de prueba']);
+});
+
+test('employees and administrators can sign in using their numeric code', function () {
+    $this->post(route('login.store'), [
+        'nombre' => '1',
+        'password' => 'empleado',
+    ])->assertRedirect(route('menu-principal', absolute: false));
+
+    Auth::forgetGuards();
+    $this->get(route('menu-principal'))->assertOk()->assertSee('Igual');
+    expect(Auth::user())->toBeInstanceOf(EMPLEADO::class);
+    expect(Hash::check('empleado', DB::table('Empleado')->where('codigo', 1)->value('contraseña')))->toBeTrue();
+
+    $this->post(route('logout'));
+    $this->post(route('login.store'), [
+        'nombre' => '1',
+        'password' => '1234',
+    ])->assertRedirect(route('menu-principal', absolute: false));
+
+    Auth::forgetGuards();
+    expect(Auth::user())->toBeInstanceOf(Administrador::class);
 });
 
 test('invalid credentials cannot authenticate either account', function () {

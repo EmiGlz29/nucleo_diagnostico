@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\DoctorFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string $codigo
@@ -59,5 +60,10 @@ class Doctor extends Authenticatable
     public function getAuthPasswordName(): string
     {
         return 'contraseña';
+    }
+
+    public function citas(): HasMany
+    {
+        return $this->hasMany(Cita::class, 'codigodoctor', 'codigo');
     }
 }

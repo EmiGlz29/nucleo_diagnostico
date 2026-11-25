@@ -5,6 +5,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
+    Schema::dropIfExists('cita');
+    Schema::dropIfExists('Empleado');
+    Schema::dropIfExists('Administrador');
+
     Schema::create('Empleado', function (Blueprint $table) {
         $table->id('codigo');
         $table->string('nombre');
@@ -61,5 +65,5 @@ test('an employee can log out and sign in as another employee', function () {
     $this->assertAuthenticatedAs($second);
     $this->get(route('menu-principal'))
         ->assertOk()
-        ->assertSee($second->nombre);
+        ->assertSee('Segundo');
 });

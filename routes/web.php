@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\CitaController;
 use App\Http\Controllers\EMPLEADOController;
 use App\Http\Controllers\PacienteController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/doctores', [DoctorController::class, 'store'])->middleware('can:gestionar-altas')->name('doctores.store');
 
     Route::get('/doctores/mostrar', [DoctorController::class, 'index'])->name('doctores.index');
+
+    Route::get('/citas/crear', [CitaController::class, 'create'])->name('citas.create');
+    Route::get('/citas/agenda', [CitaController::class, 'agenda'])->name('citas.agenda');
+    Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
+    Route::get('/citas/{codigocita}/editar', [CitaController::class, 'edit'])->name('citas.edit');
+    Route::put('/citas/{codigocita}', [CitaController::class, 'update'])->name('citas.update');
 
     //Rutas para pacientes
     Route::get('/pacientes/crear', [PacienteController::class, 'create'])->name('pacientes.create');

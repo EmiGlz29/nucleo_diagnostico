@@ -8,8 +8,8 @@ use App\Models\Administrador;
 use App\Models\EMPLEADO;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
@@ -50,8 +50,22 @@ class FortifyServiceProvider extends ServiceProvider
                 return null;
             }
 
+            $nombre = trim($nombre);
+
+            if ($nombre === '') {
+                return null;
+            }
+
             foreach ([Administrador::class, EMPLEADO::class] as $model) {
-                $user = $model::query()->where('nombre', $nombre)->first();
+                $user = $model::query()
+                    ->where(function ($query) use ($nombre): void {
+                        $query->where('nombre', $nombre);
+
+                        if (ctype_digit($nombre)) {
+                            $query->orWhere('codigo', (int) $nombre);
+                        }
+                    })
+                    ->first();
                 $storedPassword = $user?->getAttribute('contraseña');
 
                 if (! is_string($storedPassword)) {
@@ -64,12 +78,12 @@ class FortifyServiceProvider extends ServiceProvider
                     continue;
                 }
 
-                if ($user instanceof Administrador) {
-                    if (! $hashed) {
-                        $user->setAttribute('contraseña', Hash::make($password));
-                        $user->save();
-                    }
+                if (! $hashed) {
+                    $user->setAttribute('contraseña', Hash::make($password));
+                    $user->save();
+                }
 
+                if ($user instanceof Administrador) {
                     $request->merge(['remember' => false]);
                 }
 

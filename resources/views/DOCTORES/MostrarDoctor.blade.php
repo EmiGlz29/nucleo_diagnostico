@@ -39,6 +39,7 @@
                 <h1>Doctores</h1>
                 <p class="page-description">{{ $doctores->count() }} {{ $doctores->count() === 1 ? 'registro' : 'registros' }} en el directorio.</p>
             </div>
+            <a class="button button-primary" href="{{ route('citas.create') }}">Ver agenda</a>
         </header>
 
         <div class="table-wrap">
