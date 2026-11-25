@@ -3,7 +3,9 @@
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\EMPLEADOController;
 use App\Http\Controllers\PacienteController;
+use App\Http\Controllers\CitaController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::redirect('/', '/login')->name('home');
 
@@ -28,6 +30,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/pacientes', [PacienteController::class, 'store'])->name('pacientes.store');
 
     Route::get('/pacientes/mostrar', [PacienteController::class, 'index'])->name('pacientes.index');
+
+    //Rutas para citas
+    Route::get('/citas/crear', [CitaController::class, 'create'])->name('citas.create');
+    Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
+
+    Route::get('/citas/mostrar', [CitaController::class, 'index'])->name('citas.index');
 });
 
 require __DIR__.'/settings.php';
