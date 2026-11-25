@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Paciente;
-use Illuminate\Http\Request;
 use App\Http\Requests\StorePacienteRequest;
 use App\Http\Requests\UpdatePacienteRequest;
+use App\Models\Paciente;
 
 class PacienteController extends Controller
 {
@@ -15,6 +14,7 @@ class PacienteController extends Controller
     public function index()
     {
         $pacientes = Paciente::all();
+
         return view('PACIENTES.MostrarPaciente', compact('pacientes'));
     }
 
@@ -30,7 +30,7 @@ class PacienteController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StorePacienteRequest $request)
-    {  
+    {
         $validated = $request->validated();
 
         // Crear el empleado (contraseña sin hashear)
@@ -40,6 +40,7 @@ class PacienteController extends Controller
         return redirect()->route('menu-principal')
             ->with('success', 'Paciente '.$paciente->nombre.' agregado exitosamente.');
     }
+
     /**
      * Display the specified resource.
      */

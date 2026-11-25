@@ -1,5 +1,5 @@
 :root {
-    font-family: Inter, "Segoe UI", Arial, sans-serif;
+    font-family: Inter, 'Segoe UI', Arial, sans-serif;
     color: #102b49;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -17,8 +17,16 @@ body {
     min-height: 100vh;
     margin: 0;
     background:
-        radial-gradient(ellipse at 82% 18%, rgba(124, 153, 217, .2), transparent 34%),
-        radial-gradient(ellipse at 64% 88%, rgba(8, 127, 181, .1), transparent 36%),
+        radial-gradient(
+            ellipse at 82% 18%,
+            rgba(124, 153, 217, 0.2),
+            transparent 34%
+        ),
+        radial-gradient(
+            ellipse at 64% 88%,
+            rgba(8, 127, 181, 0.1),
+            transparent 36%
+        ),
         linear-gradient(135deg, #f7fbff 0%, #e7f0f8 52%, #dce8f2 100%);
 }
 
@@ -32,9 +40,9 @@ body {
     flex-direction: column;
     gap: 8px;
     padding: 22px 14px;
-    border-right: 1px solid rgba(255, 255, 255, .12);
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
     background: linear-gradient(165deg, #354f70 0%, #263f60 100%);
-    box-shadow: 12px 0 34px rgba(16, 43, 73, .12);
+    box-shadow: 12px 0 34px rgba(16, 43, 73, 0.12);
 }
 
 .sidebar a {
@@ -44,17 +52,20 @@ body {
     padding: 12px 15px;
     border: 1px solid transparent;
     border-radius: 15px;
-    color: rgba(255, 255, 255, .9);
+    color: rgba(255, 255, 255, 0.9);
     font-size: 15px;
     font-weight: 600;
     text-decoration: none;
-    transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.18s ease;
 }
 
 .sidebar a:hover {
     transform: translateX(3px);
-    border-color: rgba(255, 255, 255, .12);
-    background-color: rgba(255, 255, 255, .12);
+    border-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.12);
 }
 
 .sidebar a:focus-visible,
@@ -65,10 +76,10 @@ input:focus-visible {
 }
 
 .sidebar a.active {
-    border-color: rgba(255, 255, 255, .16);
+    border-color: rgba(255, 255, 255, 0.16);
     background: linear-gradient(120deg, #087fb5, #176da0);
     color: #fff;
-    box-shadow: 0 5px 14px rgba(5, 28, 51, .18);
+    box-shadow: 0 5px 14px rgba(5, 28, 51, 0.18);
 }
 
 .sidebar-item {
@@ -91,7 +102,7 @@ input:focus-visible {
 .sidebar .submenu a {
     min-height: 40px;
     padding: 9px 12px;
-    color: rgba(255, 255, 255, .78);
+    color: rgba(255, 255, 255, 0.78);
     font-size: 13px;
     font-weight: 500;
 }
@@ -117,7 +128,7 @@ input:focus-visible {
     color: var(--blue);
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: .15em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
 }
 
@@ -125,7 +136,7 @@ input:focus-visible {
     margin: 0;
     color: var(--navy);
     font-size: clamp(26px, 3vw, 36px);
-    letter-spacing: -.035em;
+    letter-spacing: -0.035em;
 }
 
 .page-description {
@@ -138,10 +149,10 @@ input:focus-visible {
     max-width: 1120px;
     margin: 0 auto;
     padding: clamp(20px, 3vw, 32px);
-    border: 1px solid rgba(255, 255, 255, .85);
+    border: 1px solid rgba(255, 255, 255, 0.85);
     border-radius: 26px;
-    background: rgba(255, 255, 255, .82);
-    box-shadow: 0 20px 55px rgba(28, 58, 89, .1);
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 20px 55px rgba(28, 58, 89, 0.1);
     backdrop-filter: blur(12px);
 }
 
@@ -175,14 +186,17 @@ input:focus-visible {
     color: var(--navy);
     font: inherit;
     font-size: 15px;
-    transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease;
+    transition:
+        border-color 0.18s ease,
+        background-color 0.18s ease,
+        box-shadow 0.18s ease;
 }
 
 .form-group input:focus {
     border-color: #53a9ce;
     outline: none;
     background: #fff;
-    box-shadow: 0 0 0 4px rgba(8, 127, 181, .11);
+    box-shadow: 0 0 0 4px rgba(8, 127, 181, 0.11);
 }
 
 .button-group {
@@ -205,7 +219,10 @@ input:focus-visible {
     font-weight: 700;
     text-decoration: none;
     cursor: pointer;
-    transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background-color 0.18s ease;
 }
 
 .button:hover {
@@ -215,11 +232,11 @@ input:focus-visible {
 .button-primary {
     background: linear-gradient(120deg, #087fb5, #176da0);
     color: #fff;
-    box-shadow: 0 8px 18px rgba(8, 127, 181, .2);
+    box-shadow: 0 8px 18px rgba(8, 127, 181, 0.2);
 }
 
 .button-primary:hover {
-    box-shadow: 0 12px 24px rgba(8, 127, 181, .28);
+    box-shadow: 0 12px 24px rgba(8, 127, 181, 0.28);
 }
 
 .button-secondary {
@@ -256,10 +273,10 @@ input:focus-visible {
     max-width: 1120px;
     margin: 0 auto;
     overflow: auto;
-    border: 1px solid rgba(255, 255, 255, .85);
+    border: 1px solid rgba(255, 255, 255, 0.85);
     border-radius: 24px;
-    background: rgba(255, 255, 255, .86);
-    box-shadow: 0 20px 55px rgba(28, 58, 89, .1);
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: 0 20px 55px rgba(28, 58, 89, 0.1);
 }
 
 .data-table {
@@ -276,7 +293,7 @@ input:focus-visible {
     color: #fff;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: .06em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     white-space: nowrap;
 }
@@ -312,8 +329,8 @@ input:focus-visible {
 
 .sidebar-user {
     padding: 0 12px 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, .2);
-    color: rgba(255, 255, 255, .72);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.72);
     font-size: 13px;
 }
 
@@ -338,7 +355,7 @@ input:focus-visible {
     border: 1px solid transparent;
     border-radius: 15px;
     background: transparent;
-    color: rgba(255, 255, 255, .9);
+    color: rgba(255, 255, 255, 0.9);
     font: inherit;
     font-size: 15px;
     font-weight: 600;
@@ -347,7 +364,7 @@ input:focus-visible {
 }
 
 .sidebar-logout:hover {
-    background: rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .appointment-content {
@@ -435,7 +452,7 @@ input:focus-visible {
     color: var(--blue);
     font-size: 11px;
     font-weight: 800;
-    letter-spacing: .1em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
 }
 
@@ -453,7 +470,7 @@ input:focus-visible {
 
 .calendar-layout {
     display: grid;
-    grid-template-columns: minmax(270px, .75fr) minmax(0, 1.65fr);
+    grid-template-columns: minmax(270px, 0.75fr) minmax(0, 1.65fr);
     gap: 20px;
     align-items: start;
     margin-top: 24px;
@@ -465,7 +482,7 @@ input:focus-visible {
     padding: 18px;
     border: 1px solid #e0e9f0;
     border-radius: 20px;
-    background: rgba(250, 252, 254, .82);
+    background: rgba(250, 252, 254, 0.82);
 }
 
 .calendar-heading {
@@ -600,7 +617,7 @@ input:focus-visible {
 .view-switch button.view-active {
     background: #fff;
     color: var(--blue);
-    box-shadow: 0 2px 6px rgba(28, 58, 89, .1);
+    box-shadow: 0 2px 6px rgba(28, 58, 89, 0.1);
 }
 
 .agenda-table-wrap {
@@ -812,6 +829,6 @@ input:focus-visible {
     *::before,
     *::after {
         scroll-behavior: auto !important;
-        transition-duration: .01ms !important;
+        transition-duration: 0.01ms !important;
     }
 }

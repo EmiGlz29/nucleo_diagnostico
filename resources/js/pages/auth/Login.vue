@@ -38,7 +38,9 @@ defineProps<{
     >
         <div class="grid gap-6">
             <div class="grid gap-2">
-                <Label for="nombre">Nombre o código de Administrador/Empleado</Label>
+                <Label for="nombre"
+                    >Nombre o código de Administrador/Empleado</Label
+                >
                 <Input
                     id="nombre"
                     type="text"
