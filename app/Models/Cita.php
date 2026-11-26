@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Cita extends Model
 {
-    protected $table = 'cita';
+    protected $table = 'Cita';
 
     protected $primaryKey = 'codigocita';
 
-    protected $keyType = 'string';
+    protected $keyType = 'int';
 
     public $incrementing = false;
 
@@ -23,6 +23,7 @@ class Cita extends Model
         'codigodoctor',
         'fechacita',
         'hora',
+        'codigoempleado',
     ];
 
     public function doctor(): BelongsTo
@@ -33,5 +34,10 @@ class Cita extends Model
     public function paciente(): BelongsTo
     {
         return $this->belongsTo(Paciente::class, 'codigopaciente', 'codigo');
+    }
+
+    public function empleado(): BelongsTo
+    {
+        return $this->belongsTo(EMPLEADO::class, 'codigoempleado', 'codigo');
     }
 }

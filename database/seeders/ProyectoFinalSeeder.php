@@ -11,7 +11,7 @@ class ProyectoFinalSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach (['Administrador', 'Empleado', 'Doctor', 'Paciente', 'cita'] as $table) {
+        foreach (['Administrador', 'Empleado', 'Doctor', 'Paciente', 'Cita'] as $table) {
             if (! Schema::hasTable($table)) {
                 throw new RuntimeException("No se puede cargar el proyecto: falta la tabla {$table}. Ejecute php artisan migrate primero.");
             }
@@ -160,7 +160,7 @@ class ProyectoFinalSeeder extends Seeder
                 'nombre', 'direccion', 'telefono', 'fecha_nac', 'sexo', 'edad', 'estatura',
             ]);
 
-            DB::table('cita')->truncate();
+            DB::table('Cita')->truncate();
         });
 
         $this->command?->info('Registros oficiales cargados. Citas vaciadas para iniciar las pruebas.');

@@ -30,12 +30,19 @@
                 <a href="{{ route('pacientes.index') }}">Consultas generales</a>
             </div>
         </div>
+        <div class="sidebar-item">
+            <a href="{{ route('citas.index') }}">Citas</a>
+            <div class="submenu">
+                <a href="{{ route('citas.create') }}">Agregar cita</a>
+                <a href="{{ route('citas.index') }}">Consultas generales</a>
+            </div>
+        </div>
     </nav>
 
     <main class="container">
         <header class="page-header">
             <div>
-                <p class="eyebrow">Núcleo de Diagnóstico · San Mariscal</p>
+                <p class="eyebrow">Núcleo de Diagnóstico · San Miguel</p>
                 <h1>Doctores</h1>
                 <p class="page-description">{{ $doctores->count() }} {{ $doctores->count() === 1 ? 'registro' : 'registros' }} en el directorio.</p>
             </div>

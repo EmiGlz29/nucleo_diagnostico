@@ -52,7 +52,7 @@ return new class extends Migration
                 $table->date('fecha_nac');
                 $table->string('sexo', 20);
                 $table->integer('edad');
-                $table->decimal('estatura', 4, 2);
+                $table->decimal('estatura', 5, 2);
             });
         }
 

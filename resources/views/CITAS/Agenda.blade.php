@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $cita ? 'Reprogramar cita' : 'Agenda médica' }} | San Mariscal</title>
+    <title>{{ $cita ? 'Reprogramar cita' : 'Agenda médica' }} | San Miguel</title>
     <link rel="stylesheet" href="{{ asset('management.css') }}">
 </head>
 <body>
@@ -25,7 +25,7 @@
             <a href="{{ route('citas.create') }}" class="active">Citas</a>
             <div class="submenu">
                 <a href="{{ route('citas.create') }}" class="active">Registrar cita</a>
-                <a href="{{ route('citas.create') }}">Ver agenda</a>
+                <a href="{{ route('citas.index') }}">Ver agenda</a>
             </div>
         </div>
         <div class="sidebar-item">
@@ -44,7 +44,7 @@
     <main class="container appointment-page">
         <header class="page-header">
             <div>
-                <p class="eyebrow">Núcleo de Diagnóstico · San Mariscal</p>
+                <p class="eyebrow">Núcleo de Diagnóstico</p>
                 <h1>{{ $cita ? 'Modificar / reprogramar cita' : 'Agenda médica' }}</h1>
                 <p class="page-description">Selecciona doctor, fecha y horario para registrar o reprogramar una cita.</p>
             </div>
@@ -177,15 +177,19 @@
                         </div>
                         <div class="form-group">
                             <label for="appointment-code">Código de cita</label>
-                            <input id="appointment-code" name="codigocita" type="text" maxlength="20"
+                            <input id="appointment-code" name="codigocita" type="number" min="1" max="2147483647" step="1"
                                 value="{{ old('codigocita', $cita?->codigocita ?? $nextCode) }}" required>
                             @error('codigocita') <span class="error-message">{{ $message }}</span> @enderror
                         </div>
                     </div>
                     <div class="button-group">
-                        <button type="submit" class="button button-primary" id="submit-appointment" disabled>
+                        <button type="submit" class="button button-primary" id="submit-appointment" disabled
+                            @if (! $cita && ! (Auth::user() instanceof \App\Models\EMPLEADO)) hidden @endif>
                             {{ $cita ? 'Confirmar y guardar reprogramación' : 'Confirmar y registrar cita' }}
                         </button>
+                        @if (! $cita && ! (Auth::user() instanceof \App\Models\EMPLEADO))
+                            <p>Solo los empleados pueden registrar citas.</p>
+                        @endif
                         @if ($cita)
                             <a class="button button-secondary" href="{{ route('citas.create') }}">Cancelar</a>
                         @endif
@@ -213,6 +217,7 @@
             const endpoint = @json(route('citas.agenda'));
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
             const baseCitasUrl = @json(url('/citas'));
+            const minAppointmentDate = @json($minAppointmentDate);
             const oldDate = @json($initialDate);
             const oldTime = @json($initialTime);
             let visibleMonth = oldDate ? new Date(`${oldDate}T12:00:00`) : new Date();
@@ -226,7 +231,7 @@
             const titleDate = (value) => new Date(`${value}T12:00:00`).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }).toUpperCase();
             const chosenDoctor = () => doctors.options[doctors.selectedIndex];
             const today = isoDate(new Date());
-            const isPast = (value) => value < today;
+            const isBeforeMinimum = (value) => value < minAppointmentDate;
             const appointmentsByDate = () => currentBookings.reduce((grouped, appointment) => {
                 const date = String(appointment.fechacita).slice(0, 10);
                 grouped[date] = (grouped[date] || 0) + 1;
@@ -250,6 +255,7 @@
             }
 
             function chooseSlot(date, time) {
+                if (isBeforeMinimum(date)) return;
                 selectedDate = date;
                 selectedTime = time;
                 document.getElementById('form-doctor').value = doctors.value;
@@ -363,7 +369,7 @@
                     button.type = 'button';
                     button.className = 'slot-select';
                     button.textContent = selectedDate === date && selectedTime === time ? '✓ Seleccionado' : 'Seleccionar';
-                    button.disabled = isPast(date) || new Date(`${date}T${time}:00`) < new Date();
+                    button.disabled = isBeforeMinimum(date);
                     button.addEventListener('click', () => chooseSlot(date, time));
                     cell.append(button);
                 }
@@ -466,8 +472,8 @@
             async function renderAgenda() {
                 if (!selectedDate) return;
                 document.getElementById('agenda-heading').textContent = prettyDate(selectedDate);
-                document.getElementById('agenda-hint').textContent = isPast(selectedDate)
-                    ? 'Fecha pasada: puedes consultar la agenda, pero no registrar una cita.'
+                document.getElementById('agenda-hint').textContent = isBeforeMinimum(selectedDate)
+                    ? 'Puedes consultar la agenda, pero solo se permiten citas desde el 23 de noviembre de 2026.'
                     : 'Selecciona una fila libre para rellenar automáticamente los datos de la cita.';
                 try {
                     if (agendaMode === 'week') {

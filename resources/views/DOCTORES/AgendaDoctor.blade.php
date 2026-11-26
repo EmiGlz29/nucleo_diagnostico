@@ -73,6 +73,7 @@
                                         COMIDA
                                     @elseif ($cita)
                                         Paciente {{ $cita->paciente->nombre }}
+                                        
                                     @else
                                         Libre
                                     @endif
