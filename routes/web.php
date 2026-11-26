@@ -24,12 +24,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/doctores/{doctor}/agenda', [DoctorController::class, 'agenda'])->name('doctores.agenda');
     Route::get('/doctores/mostrar', [DoctorController::class, 'index'])->name('doctores.index');
 
+    // Rutas para citas
     Route::get('/citas/crear', [CitaController::class, 'create'])->name('citas.create');
     Route::get('/citas/agenda', [CitaController::class, 'agenda'])->name('citas.agenda');
     Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
     Route::get('/citas/{codigocita}/editar', [CitaController::class, 'edit'])->name('citas.edit');
     Route::put('/citas/{codigocita}', [CitaController::class, 'update'])->name('citas.update');
+    Route::delete('/citas/{codigocita}', [CitaController::class, 'destroy'])->name('citas.destroy');
     Route::get('/citas/mostrar', [CitaController::class, 'index'])->name('citas.index');
+    Route::get('/citas/{codigocita}/edit', [CitaController::class, 'edit'])->name('citas.edit');
 
     // Rutas para pacientes
     Route::get('/pacientes/crear', [PacienteController::class, 'create'])->name('pacientes.create');

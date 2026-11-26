@@ -211,6 +211,8 @@
             const patientPanel = document.getElementById('patient-panel');
             const submitButton = document.getElementById('submit-appointment');
             const endpoint = @json(route('citas.agenda'));
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            const baseCitasUrl = @json(url('/citas'));
             const oldDate = @json($initialDate);
             const oldTime = @json($initialTime);
             let visibleMonth = oldDate ? new Date(`${oldDate}T12:00:00`) : new Date();
@@ -315,6 +317,32 @@
                 row.append(cell);
                 return cell;
             }
+ //La aguregué para que se pueda eliminar la cita desde la agenda
+            function createActionButtons(code) {
+            const wrapper = document.createElement('div');
+            wrapper.style.display = 'flex';
+            wrapper.style.gap = '6px';
+
+            // Botón Reprogramar / Editar
+            const editLink = document.createElement('a');
+            editLink.href = `${baseCitasUrl}/${encodeURIComponent(code)}/edit`;
+            editLink.className = 'button button-secondary';
+            editLink.textContent = 'Editar';
+
+            // Botón Eliminar (usa un formulario POST con _method=DELETE)
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `${baseCitasUrl}/${encodeURIComponent(code)}`;
+            form.onsubmit = () => confirm(`¿Seguro que deseas eliminar la cita ${code}?`);
+            form.innerHTML = `
+                <input type="hidden" name="_token" value="${csrfToken}">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" class="button">Eliminar</button>
+            `;
+
+            wrapper.append(editLink, form);
+            return wrapper;
+        }
 
             function createSlotCell(date, time, appointments) {
                 const occupied = appointments.find((appointment) => String(appointment.hora).slice(0, 5) === time);
@@ -328,7 +356,7 @@
                     name.textContent = occupied.paciente;
                     const code = document.createElement('small');
                     code.textContent = `Cita ${occupied.codigocita}`;
-                    cell.append(name, code);
+                    cell.append(name, code, createActionButtons(occupied.codigocita));
                 } else {
                     cell.className = 'slot-free';
                     const button = document.createElement('button');
@@ -343,42 +371,61 @@
             }
 
             function renderDay(date, bookings) {
-                const head = table.querySelector('thead');
-                const body = table.querySelector('tbody');
-                head.replaceChildren();
-                body.replaceChildren();
-                const header = document.createElement('tr');
-                ['Horario', 'Estado', 'Paciente / cita', 'Acción'].forEach((label) => {
-                    const th = document.createElement('th');
-                    th.scope = 'col';
-                    th.textContent = label;
-                    header.append(th);
-                });
-                head.append(header);
-                const entries = bookings.filter((appointment) => String(appointment.fechacita).slice(0, 10) === date);
+            const head = table.querySelector('thead');
+            const body = table.querySelector('tbody');
+            head.replaceChildren();
+            body.replaceChildren();
 
-                for (let hour = 9; hour <= 19; hour++) {
-                    const time = `${String(hour).padStart(2, '0')}:00`;
-                    const row = document.createElement('tr');
-                    addCell(row, `${time} - ${String(hour + 1).padStart(2, '0')}:00`);
-                    const status = document.createElement('td');
-                    const busy = entries.some((appointment) => String(appointment.hora).slice(0, 5) === time);
-                    status.textContent = hour === 14 || hour === 15 ? 'COMIDA' : busy ? 'OCUPADO' : 'LIBRE';
-                    status.className = hour === 14 || hour === 15 ? 'status-break' : busy ? 'status-busy' : 'status-free';
-                    row.append(status);
-                    const appointmentCell = document.createElement('td');
-                    const appointment = entries.find((item) => String(item.hora).slice(0, 5) === time);
-                    appointmentCell.textContent = appointment ? `${appointment.paciente} · ${appointment.codigocita}` : hour === 14 || hour === 15 ? 'HORARIO DE COMIDA' : '—';
-                    row.append(appointmentCell);
-                    const action = hour === 14 || hour === 15 || appointment
-                        ? addCell(row, '—')
-                        : createSlotCell(date, time, entries);
-                    if (action.classList.contains('slot-free') && selectedDate === date && selectedTime === time) {
-                        row.classList.add('slot-row-selected');
-                    }
-                    body.append(row);
+            const header = document.createElement('tr');
+            ['Horario', 'Estado', 'Paciente / cita', 'Acción'].forEach((label) => {
+                const th = document.createElement('th');
+                th.scope = 'col';
+                th.textContent = label;
+                header.append(th);
+            });
+            head.append(header);
+
+            const entries = bookings.filter((appointment) => String(appointment.fechacita).slice(0, 10) === date);
+
+            for (let hour = 9; hour <= 19; hour++) {
+                const time = `${String(hour).padStart(2, '0')}:00`;
+                const row = document.createElement('tr');
+                addCell(row, `${time} - ${String(hour + 1).padStart(2, '0')}:00`);
+
+                const status = document.createElement('td');
+                const busy = entries.some((appointment) => String(appointment.hora).slice(0, 5) === time);
+                status.textContent = hour === 14 || hour === 15 ? 'COMIDA' : busy ? 'OCUPADO' : 'LIBRE';
+                status.className = hour === 14 || hour === 15 ? 'status-break' : busy ? 'status-busy' : 'status-free';
+                row.append(status);
+
+                const appointmentCell = document.createElement('td');
+                const appointment = entries.find((item) => String(item.hora).slice(0, 5) === time);
+                appointmentCell.textContent = appointment
+                    ? `${appointment.paciente} · ${appointment.codigocita}`
+                    : hour === 14 || hour === 15
+                        ? 'HORARIO DE COMIDA'
+                        : '—';
+                row.append(appointmentCell);
+
+                let action;
+                if (hour === 14 || hour === 15) {
+                    action = addCell(row, '—');
+                } else if (appointment) {
+                    action = document.createElement('td');
+                    action.append(createActionButtons(appointment.codigocita));
+                    row.append(action);
+                } else {
+                    action = createSlotCell(date, time, entries);
+                    row.append(action);
                 }
+
+                if (action.classList.contains('slot-free') && selectedDate === date && selectedTime === time) {
+                    row.classList.add('slot-row-selected');
+                }
+
+                body.append(row);
             }
+        }
 
             async function renderWeek(date) {
                 const selected = new Date(`${date}T12:00:00`);

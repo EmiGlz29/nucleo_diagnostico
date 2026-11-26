@@ -67,7 +67,7 @@ class FortifyServiceProvider extends ServiceProvider
                     })
                     ->first();
                 $storedPassword = $user?->getAttribute('contraseña');
-
+                
                 if (! is_string($storedPassword)) {
                     continue;
                 }
