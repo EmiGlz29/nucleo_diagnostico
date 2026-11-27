@@ -527,6 +527,15 @@
                 <a href="{{ route('citas.index') }}">Ver citas</a>
             </div>
         </div>
+        <div class="sidebar-item">
+            <a href="{{ route('medicamentos.index') }}">Medicamentos</a>
+            <div class="submenu">
+                                @can('gestionar-altas')
+                    <a href="{{ route('medicamentos.create') }}">Agregar Medicamento</a>
+                @endcan
+                <a href="{{ route('medicamentos.index') }}">Consultas generales</a>
+            </div>
+        </div>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="sidebar-logout">Cerrar sesión</button>

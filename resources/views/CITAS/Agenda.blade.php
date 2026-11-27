@@ -14,6 +14,13 @@
         </div>
         <a href="{{ route('menu-principal') }}">Inicio</a>
         <div class="sidebar-item">
+            <a href="{{ route('empleados.index') }}">Empleados</a>
+            <div class="submenu">
+                                @can('gestionar-altas') <a href="{{ route('empleados.create') }}">Agregar empleados</a> @endcan
+                <a href="{{ route('empleados.index') }}">Consultas generales</a>
+            </div>
+        </div>
+        <div class="sidebar-item">
             <a href="{{ route('doctores.index') }}">Doctores</a>
             <div class="submenu">
                 @can('gestionar-altas') <a href="{{ route('doctores.create') }}">Agregar doctores</a> @endcan
@@ -33,6 +40,13 @@
             <div class="submenu">
                 <a href="{{ route('pacientes.create') }}">Agregar paciente</a>
                 <a href="{{ route('pacientes.index') }}">Consultas generales</a>
+            </div>
+        </div>
+        <div class="sidebar-item">
+            <a href="{{ route('medicamentos.index') }}">Medicamentos</a>
+            <div class="submenu">
+                                @can('gestionar-altas') <a href="{{ route('medicamentos.create') }}">Agregar medicamento</a> @endcan
+                <a href="{{ route('medicamentos.index') }}" class="active">Consultas generales</a>
             </div>
         </div>
         <form method="POST" action="{{ route('logout') }}">

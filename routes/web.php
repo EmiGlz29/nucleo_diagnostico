@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CitaController;
+use App\Http\Controllers\MedicamentoController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\EMPLEADOController;
 use App\Http\Controllers\PacienteController;
@@ -32,9 +33,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/citas/mostrar', [CitaController::class, 'index'])->name('citas.index');
 
     // Rutas para pacientes
-    Route::get('/pacientes/crear', [PacienteController::class, 'create'])->name('pacientes.create');
-    Route::post('/pacientes', [PacienteController::class, 'store'])->name('pacientes.store');
+    Route::get('/pacientes/crear', [PacienteController::class, 'create'])->middleware('can:registrar-pacientes')->name('pacientes.create');
+    Route::post('/pacientes', [PacienteController::class, 'store'])->middleware('can:registrar-pacientes')->name('pacientes.store');
     Route::get('/pacientes/mostrar', [PacienteController::class, 'index'])->name('pacientes.index');
+    //Rutas para Medicamentos
+    Route::get('/medicamentos/crear', [MedicamentoController::class, 'create'])->middleware('can:gestionar-altas')->name('medicamentos.create');
+    Route::post('/medicamentos', [MedicamentoController::class, 'store'])->middleware('can:gestionar-altas')->name('medicamentos.store');
+    Route::get('/medicamentos/mostrar', [MedicamentoController::class, 'index'])->name('medicamentos.index');
 
 });
 

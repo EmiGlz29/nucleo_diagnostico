@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Models\Administrador;
+use App\Models\Doctor;
 use App\Models\EMPLEADO;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -43,7 +44,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     private function configureAuthentication(): void
     {
-        Fortify::authenticateUsing(function (Request $request): EMPLEADO|Administrador|null {
+        Fortify::authenticateUsing(function (Request $request): EMPLEADO|Administrador|Doctor|null {
             $nombre = $request->input(Fortify::username());
             $password = $request->input('password');
             if (! is_string($nombre) || ! is_string($password)) {
@@ -56,7 +57,7 @@ class FortifyServiceProvider extends ServiceProvider
                 return null;
             }
 
-            foreach ([Administrador::class, EMPLEADO::class] as $model) {
+            foreach ([Administrador::class, EMPLEADO::class, Doctor::class] as $model) {
                 $user = $model::query()
                     ->where(function ($query) use ($nombre): void {
                         $query->where('nombre', $nombre);
@@ -78,16 +79,15 @@ class FortifyServiceProvider extends ServiceProvider
                     continue;
                 }
 
-                if (! $hashed) {
-                    $user->setAttribute('contraseña', Hash::make($password));
-                    $user->save();
-                }
-
-                if ($user instanceof Administrador) {
+                if (! $user instanceof EMPLEADO) {
                     $request->merge(['remember' => false]);
                 }
 
-                $request->session()->put('auth.account_type', $user instanceof Administrador ? 'administrador' : 'empleado');
+                $request->session()->put('auth.account_type', match (true) {
+                    $user instanceof Administrador => 'administrador',
+                    $user instanceof Doctor => 'doctor',
+                    default => 'empleado',
+                });
 
                 return $user;
             }

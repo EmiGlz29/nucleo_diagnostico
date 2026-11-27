@@ -78,7 +78,7 @@ class CitaController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        abort_unless($request->user() instanceof EMPLEADO, 403, 'Solo los empleados pueden registrar citas.');
+        abort_unless($request->user() instanceof EMPLEADO || $request->user() instanceof Doctor, 403, 'Solo los empleados y doctores pueden registrar citas.');
 
         return $this->save($request);
     }

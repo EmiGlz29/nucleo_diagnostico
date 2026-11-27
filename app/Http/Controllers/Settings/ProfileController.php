@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileDeleteRequest;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
 use App\Models\Administrador;
+use App\Models\Doctor;
 use App\Models\EMPLEADO;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
@@ -23,7 +24,7 @@ class ProfileController extends Controller
     {
         return Inertia::render('settings/Profile', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'canDeleteProfile' => ! ($request->user() instanceof EMPLEADO || $request->user() instanceof Administrador),
+            'canDeleteProfile' => ! ($request->user() instanceof EMPLEADO || $request->user() instanceof Administrador || $request->user() instanceof Doctor),
             'status' => $request->session()->get('status'),
         ]);
     }
@@ -36,7 +37,7 @@ class ProfileController extends Controller
         $user = $request->user();
         $validated = $request->validated();
 
-        if ($user instanceof EMPLEADO || $user instanceof Administrador) {
+        if ($user instanceof EMPLEADO || $user instanceof Administrador || $user instanceof Doctor) {
             $user->setAttribute('nombre', $validated['name']);
         } else {
             $user->fill($validated);
@@ -60,7 +61,7 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        abort_if($user instanceof EMPLEADO || $user instanceof Administrador, 403);
+        abort_if($user instanceof EMPLEADO || $user instanceof Administrador || $user instanceof Doctor, 403);
 
         Auth::logout();
 

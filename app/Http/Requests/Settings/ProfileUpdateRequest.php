@@ -4,6 +4,7 @@ namespace App\Http\Requests\Settings;
 
 use App\Concerns\ProfileValidationRules;
 use App\Models\Administrador;
+use App\Models\Doctor;
 use App\Models\EMPLEADO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -18,7 +19,7 @@ class ProfileUpdateRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        if (! ($this->user() instanceof EMPLEADO || $this->user() instanceof Administrador) && is_string($this->input('email'))) {
+        if (! ($this->user() instanceof EMPLEADO || $this->user() instanceof Administrador || $this->user() instanceof Doctor) && is_string($this->input('email'))) {
             $this->merge(['email' => Str::lower($this->input('email'))]);
         }
     }
@@ -30,7 +31,7 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->user() instanceof EMPLEADO || $this->user() instanceof Administrador) {
+        if ($this->user() instanceof EMPLEADO || $this->user() instanceof Administrador || $this->user() instanceof Doctor) {
             return [
                 'name' => ['required', 'string', 'max:50'],
             ];

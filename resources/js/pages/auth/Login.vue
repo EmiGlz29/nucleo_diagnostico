@@ -10,7 +10,7 @@ import { store } from '@/routes/login';
 
 defineOptions({
     layout: {
-        title: 'Inicia sesion con tu cuenta de Administrador/Empleado',
+        title: 'Inicia sesion con tu cuenta',
         description: 'Ingresa tu usuario y contraseña para acceder al sistema',
     },
 });
@@ -39,7 +39,7 @@ defineProps<{
         <div class="grid gap-6">
             <div class="grid gap-2">
                 <Label for="nombre"
-                    >Nombre o código de Administrador/Empleado</Label
+                    >Nombre</Label
                 >
                 <Input
                     id="nombre"

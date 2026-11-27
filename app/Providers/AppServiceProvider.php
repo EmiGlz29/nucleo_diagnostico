@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Auth\AccountUserProvider;
 use App\Models\Administrador;
+use App\Models\Doctor;
+use App\Models\EMPLEADO;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
@@ -41,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
         ));
 
         Gate::define('gestionar-altas', fn ($user): bool => $user instanceof Administrador);
+        Gate::define('registrar-pacientes', fn ($user): bool => $user instanceof Administrador || $user instanceof EMPLEADO || $user instanceof Doctor);
     }
 
     /**

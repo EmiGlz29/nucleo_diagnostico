@@ -30,6 +30,13 @@
                 <a href="{{ route('pacientes.index') }}">Consultas generales</a>
             </div>
         </div>
+        <div class="sidebar-item">
+            <a href="{{ route('citas.create') }}">Citas</a>
+            <div class="submenu">
+                <a href="{{ route('citas.create') }}">Registrar cita</a>
+                <a href="{{ route('citas.index') }}">Ver citas</a>
+            </div>
+        </div>
     </nav>
 
     <main class="container">

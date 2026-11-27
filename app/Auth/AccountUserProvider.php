@@ -3,6 +3,7 @@
 namespace App\Auth;
 
 use App\Models\Administrador;
+use App\Models\Doctor;
 use Illuminate\Auth\EloquentUserProvider;
 
 class AccountUserProvider extends EloquentUserProvider
@@ -13,6 +14,10 @@ class AccountUserProvider extends EloquentUserProvider
 
         if ($type === 'administrador') {
             return Administrador::query()->whereKey($identifier)->first();
+        }
+
+        if ($type === 'doctor') {
+            return Doctor::query()->whereKey($identifier)->first();
         }
 
         return $type === 'empleado' ? parent::retrieveById($identifier) : null;
