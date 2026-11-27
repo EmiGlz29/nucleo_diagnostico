@@ -21,10 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/doctores', [DoctorController::class, 'store'])->middleware('can:gestionar-altas')->name('doctores.store');
     Route::get('/doctores/{doctor}/agenda', [DoctorController::class, 'agenda'])->name('doctores.agenda');
     Route::get('/doctores/mostrar', [DoctorController::class, 'index'])->name('doctores.index');
-<<<<<<< HEAD
-=======
 
->>>>>>> c67c798f663954c20143aa320f6a9c5fcbefbea5
     // Rutas para citas
     Route::get('/citas/crear', [CitaController::class, 'create'])->name('citas.create');
     Route::get('/citas/agenda', [CitaController::class, 'agenda'])->name('citas.agenda');
@@ -33,11 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/citas/{codigocita}', [CitaController::class, 'update'])->name('citas.update');
     Route::delete('/citas/{codigocita}', [CitaController::class, 'destroy'])->name('citas.destroy');
     Route::get('/citas/mostrar', [CitaController::class, 'index'])->name('citas.index');
-<<<<<<< HEAD
-=======
-    Route::get('/citas/{codigocita}/edit', [CitaController::class, 'edit'])->name('citas.edit');
 
->>>>>>> c67c798f663954c20143aa320f6a9c5fcbefbea5
     // Rutas para pacientes
     Route::get('/pacientes/crear', [PacienteController::class, 'create'])->name('pacientes.create');
     Route::post('/pacientes', [PacienteController::class, 'store'])->name('pacientes.store');
