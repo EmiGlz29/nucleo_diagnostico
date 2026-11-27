@@ -2,13 +2,14 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\ColumnDefinition;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        foreach (['Doctor', 'Paciente', 'Empleado'] as $table) {
+        foreach (['Doctor', 'Paciente'] as $table) {
             if (! Schema::hasTable($table) || ! Schema::hasColumn($table, 'codigo')) {
                 throw new RuntimeException("No se puede crear cita: falta la tabla {$table} o su columna codigo.");
             }
@@ -21,7 +22,7 @@ return new class extends Migration
         }
 
         if (Schema::hasTable('Cita')) {
-            foreach (['codigocita', 'codigopaciente', 'codigodoctor', 'fechacita', 'hora', 'codigoempleado'] as $column) {
+            foreach (['codigocita', 'codigopaciente', 'codigodoctor', 'fechacita', 'hora'] as $column) {
                 if (! Schema::hasColumn('Cita', $column)) {
                     throw new RuntimeException("La tabla Cita existe pero no tiene la columna requerida {$column}.");
                 }
@@ -39,23 +40,19 @@ return new class extends Migration
         }
 
         Schema::create('Cita', function (Blueprint $table) {
-            $table->integer('codigocita')->primary();
+            $table->integer('codigocita');
             $this->addCodeColumn($table, Schema::getColumnType('Paciente', 'codigo'), 'codigopaciente');
-            $this->addCodeColumn($table, Schema::getColumnType('Doctor', 'codigo'), 'codigodoctor')->nullable();
-            $table->date('fechacita');
-            $table->time('hora');
-            $this->addCodeColumn($table, Schema::getColumnType('Empleado', 'codigo'), 'codigoempleado');
+            $this->addCodeColumn($table, Schema::getColumnType('Doctor', 'codigo'), 'codigodoctor');
+            $table->date('fechacita')->nullable();
+            $table->time('hora')->nullable();
 
+            $table->primary(['codigocita', 'codigopaciente']);
             $table->foreign('codigopaciente')
                 ->references('codigo')->on('Paciente')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
             $table->foreign('codigodoctor')
                 ->references('codigo')->on('Doctor')
-                ->cascadeOnUpdate()
-                ->restrictOnDelete();
-            $table->foreign('codigoempleado')
-                ->references('codigo')->on('Empleado')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
         });
@@ -66,7 +63,7 @@ return new class extends Migration
         // Cita may predate this migration and contain existing records.
     }
 
-    private function addCodeColumn(Blueprint $table, string $type, string $column): \Illuminate\Database\Schema\ColumnDefinition
+    private function addCodeColumn(Blueprint $table, string $type, string $column): ColumnDefinition
     {
         return match ($type) {
             'smallint', 'int2' => $table->smallInteger($column),

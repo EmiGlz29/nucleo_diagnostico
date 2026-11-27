@@ -145,6 +145,7 @@
     </nav>
 
     <main class="container">
+        @include('components.management-actions')
         <div class="modification-form">
             <a href="{{ route('citas.index') }}" class="back-link">
                 ← Volver al listado
@@ -163,7 +164,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('citas.update', $cita->codigocita) }}" method="POST">
+            <form action="{{ route('citas.update', [$cita->codigocita, $cita->codigopaciente]) }}" method="POST">
                 @csrf
                 @method('PUT')
 

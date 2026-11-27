@@ -55,14 +55,31 @@ defineProps<{
             </div>
 
             <div class="grid gap-2">
+                <Label for="tipo_cuenta">Tipo de usuario</Label>
+                <select
+                    id="tipo_cuenta"
+                    name="tipo_cuenta"
+                    :tabindex="2"
+                    autocomplete="off"
+                    class="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                >
+                    <option value="">Detección automática</option>
+                    <option value="administrador">Administrador</option>
+                    <option value="empleado">Empleado</option>
+                    <option value="doctor">Doctor</option>
+                </select>
+                <InputError :message="errors.tipo_cuenta" />
+            </div>
+
+            <div class="grid gap-2">
                 <Label for="password">Contraseña</Label>
                 <PasswordInput
                     id="password"
                     name="password"
                     required
-                    :tabindex="2"
+                    :tabindex="3"
                     autocomplete="current-password"
-                    placeholder="Password"
+                    placeholder="Contraseña"
                 />
                 <InputError :message="errors.password" />
             </div>
@@ -75,18 +92,7 @@ defineProps<{
                 data-test="login-button"
             >
                 <Spinner v-if="processing" />
-                Iniciar sesion
-            </Button>
-
-            <Button
-                type="button"
-                class="mt-4 w-full"
-                :tabindex="4"
-                :disabled="processing"
-                data-test="cancel-button"
-            >
-                <Spinner v-if="processing" />
-                Cancelar
+                Iniciar sesión
             </Button>
         </div>
     </Form>

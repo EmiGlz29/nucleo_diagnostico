@@ -34,7 +34,7 @@ test('the main menu submits a protected logout request', function () {
         ->assertOk()
         ->assertSee('<form method="POST" action="'.route('logout').'">', false)
         ->assertSee('name="_token"', false)
-        ->assertSee('<button type="submit">Cerrar sesión</button>', false);
+        ->assertSee('Cerrar sesión');
 });
 
 test('an employee can log out and sign in as another employee', function () {

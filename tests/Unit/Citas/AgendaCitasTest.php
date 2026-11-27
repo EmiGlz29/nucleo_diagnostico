@@ -67,12 +67,13 @@ function citaPayload(array $overrides = []): array
     ], $overrides);
 }
 
-test('employees register appointments with an integer code and their employee key', function () {
+test('employees register appointments with the real five-column schema', function () {
     $this->get(route('citas.create'))->assertOk()->assertSee('Agenda médica');
 
     $this->post(route('citas.store'), citaPayload(['codigoempleado' => 999]))
         ->assertRedirect(route('citas.create'))->assertSessionHasNoErrors();
-    $this->assertDatabaseHas('Cita', ['codigocita' => 1, 'codigodoctor' => 10, 'codigoempleado' => 1]);
+    $this->assertDatabaseHas('Cita', ['codigocita' => 1, 'codigopaciente' => 20, 'codigodoctor' => 10]);
+    expect(Schema::hasColumn('Cita', 'codigoempleado'))->toBeFalse();
     $this->get(route('citas.create'))->assertSee('value="2"', false);
 });
 
@@ -97,13 +98,13 @@ test('meal break and conflicting appointments are rejected', function () {
     $this->post(route('citas.store'), citaPayload(['codigocita' => 3, 'codigodoctor' => 11]))->assertSessionHasErrors('codigopaciente');
 });
 
-test('appointments can be edited without changing their employee and appear in the agenda', function () {
+test('appointments can be edited using their composite key and appear in the agenda', function () {
     $this->post(route('citas.store'), citaPayload())->assertSessionHasNoErrors();
-    $this->get(route('citas.edit', 1))->assertOk();
-    $this->put(route('citas.update', 1), citaPayload(['hora' => '10:00', 'codigoempleado' => 999]))
+    $this->get(route('citas.edit', [1, 20]))->assertOk();
+    $this->put(route('citas.update', [1, 20]), citaPayload(['hora' => '10:00']))
         ->assertSessionHasNoErrors();
-    $this->assertDatabaseHas('Cita', ['codigocita' => 1, 'hora' => '10:00', 'codigoempleado' => 1]);
-    $this->put(route('citas.update', 1), citaPayload(['fechacita' => '2026-11-20']))
+    $this->assertDatabaseHas('Cita', ['codigocita' => 1, 'codigopaciente' => 20, 'hora' => '10:00']);
+    $this->put(route('citas.update', [1, 20]), citaPayload(['fechacita' => '2026-11-20']))
         ->assertSessionHasErrors('fechacita');
     $this->get(route('citas.agenda', ['codigodoctor' => 10, 'fecha' => nextWeekday()]))
         ->assertOk()->assertJsonPath('citas.0.codigocita', 1)->assertJsonMissingPath('sql');
@@ -116,9 +117,9 @@ test('appointments are allowed from November 23 2026 even when the date and time
         ->assertSessionHasErrors('fechacita');
     $this->post(route('citas.store'), citaPayload(['fechacita' => '2026-11-23']))
         ->assertSessionHasNoErrors();
-    $this->put(route('citas.update', 1), citaPayload(['fechacita' => '2026-11-24']))
+    $this->put(route('citas.update', [1, 20]), citaPayload(['fechacita' => '2026-11-24']))
         ->assertSessionHasNoErrors();
-    $this->assertDatabaseHas('Cita', ['codigocita' => 1, 'fechacita' => '2026-11-24']);
+    $this->assertDatabaseHas('Cita', ['codigocita' => 1, 'codigopaciente' => 20, 'fechacita' => '2026-11-24']);
     $this->get(route('citas.create'))->assertSee('const minAppointmentDate = "2026-11-23"', false);
 });
 
@@ -127,5 +128,5 @@ test('migration leaves an existing Cita table and its records intact', function 
     $migration = require database_path('migrations/2026_11_24_000000_create_cita_table.php');
     $migration->up();
     $migration->down();
-    $this->assertDatabaseHas('Cita', ['codigocita' => 1, 'codigoempleado' => 1]);
+    $this->assertDatabaseHas('Cita', ['codigocita' => 1, 'codigopaciente' => 20]);
 });

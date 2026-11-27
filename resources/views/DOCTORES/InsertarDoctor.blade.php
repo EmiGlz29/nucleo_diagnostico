@@ -39,6 +39,7 @@
                 <h1>Agregar doctor</h1>
                 <p class="page-description">Registra la información profesional y de contacto.</p>
             </div>
+            @include('components.management-actions')
         </header>
 
         <section class="panel">

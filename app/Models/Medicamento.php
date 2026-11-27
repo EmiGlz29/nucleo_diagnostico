@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property string $codigo
@@ -11,11 +10,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $via_admin
  * @property string $presentacion
  * @property string $fecha_cad
- */ class Medicamento extends Model
+ */
+class Medicamento extends Model
 {
-    /** @use HasFactory<EMPLEADOFactory> */
-    use HasFactory;
-
     protected $table = 'Medicamento';
 
     protected $primaryKey = 'codigo';
@@ -46,5 +43,4 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
     {
         return $this->nombre_med;
     }
-
 }

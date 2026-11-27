@@ -219,7 +219,6 @@
                             <th>Doctor</th>
                             <th>Fecha</th>
                             <th>Hora</th>
-                            <th>Empleado</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -227,7 +226,8 @@
                     <tbody>
                         @foreach ($citas as $cita)
                             @php
-                                $isPast = \Carbon\CarbonImmutable::parse($cita->fechacita)->toDateString() < '2026-11-23';
+                                $isPast = $cita->fechacita !== null
+                                    && \Carbon\CarbonImmutable::parse($cita->fechacita.' '.($cita->hora ?? '00:00:00'))->isPast();
                             @endphp
                             <tr>
                                 <td><strong>#{{ $cita->codigocita }}</strong></td>
@@ -241,9 +241,8 @@
                                     <span class="doctor-name">{{ $cita->doctor->nombre ?? '—' }}</span>
                                 </div>
                                 </td>
-                                <td>{{ \Carbon\CarbonImmutable::parse($cita->fechacita)->format('d/m/Y') }}</td>
-                                <td>{{ substr($cita->hora, 0, 5) }}</td>
-                                <td>{{ $cita->empleado->nombre ?? '—' }}</td>
+                                <td>{{ $cita->fechacita ? \Carbon\CarbonImmutable::parse($cita->fechacita)->format('d/m/Y') : '—' }}</td>
+                                <td>{{ $cita->hora ? substr($cita->hora, 0, 5) : '—' }}</td>
                                 <td>
                                     <span class="status-label {{ $isPast ? 'status-past' : 'status-scheduled' }}">
                                         {{ $isPast ? 'Pasada' : 'Vigente' }}
@@ -251,7 +250,12 @@
                                 </td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="{{ route('citas.edit', $cita->codigocita) }}" class="btn btn-primary">
+                                        @if (Auth::user() instanceof \App\Models\Doctor)
+                                            <a href="{{ route('consultas.create', [$cita->codigocita, $cita->codigopaciente]) }}" class="btn btn-primary">
+                                                Atender Consulta
+                                            </a>
+                                        @endif
+                                        <a href="{{ route('citas.edit', [$cita->codigocita, $cita->codigopaciente]) }}" class="btn btn-secondary">
                                             Modificar
                                         </a>
                                     </div>

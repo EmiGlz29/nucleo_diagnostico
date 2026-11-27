@@ -4,18 +4,46 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePacienteRequest;
 use App\Http\Requests\UpdatePacienteRequest;
+use App\Models\Cita;
+use App\Models\Doctor;
 use App\Models\Paciente;
+use Carbon\CarbonImmutable;
+use Illuminate\Http\Request;
 
 class PacienteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pacientes = Paciente::all();
+        $proximaCita = null;
+        $user = $request->user();
 
-        return view('PACIENTES.MostrarPaciente', compact('pacientes'));
+        if ($user instanceof Doctor) {
+            $now = CarbonImmutable::now();
+            $proximaCita = Cita::query()
+                ->with('paciente')
+                ->where('codigodoctor', $user->codigo)
+                ->where(function ($query) use ($now): void {
+                    $query->whereDate('fechacita', '>', $now->toDateString())
+                        ->orWhere(function ($today) use ($now): void {
+                            $today->whereDate('fechacita', $now->toDateString())
+                                ->whereTime('hora', '>=', $now->format('H:i:s'));
+                        });
+                })
+                ->orderBy('fechacita')
+                ->orderBy('hora')
+                ->first();
+
+            $pacientes = $proximaCita === null
+                ? collect()
+                : collect([$proximaCita->paciente]);
+        } else {
+            $pacientes = Paciente::query()->orderBy('nombre')->get();
+        }
+
+        return view('PACIENTES.MostrarPaciente', compact('pacientes', 'proximaCita'));
     }
 
     /**

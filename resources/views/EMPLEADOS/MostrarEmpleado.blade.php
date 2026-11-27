@@ -46,6 +46,7 @@
                 <h1>Empleados</h1>
                 <p class="page-description">{{ $empleados->count() }} {{ $empleados->count() === 1 ? 'registro' : 'registros' }} en el directorio.</p>
             </div>
+            @include('components.management-actions')
         </header>
 
         <div class="table-wrap">

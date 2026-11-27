@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\CitaController;
-use App\Http\Controllers\MedicamentoController;
+use App\Http\Controllers\ConsultaController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\EMPLEADOController;
+use App\Http\Controllers\MedicamentoController;
 use App\Http\Controllers\PacienteController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,19 +28,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/citas/crear', [CitaController::class, 'create'])->name('citas.create');
     Route::get('/citas/agenda', [CitaController::class, 'agenda'])->name('citas.agenda');
     Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
-    Route::get('/citas/{codigocita}/editar', [CitaController::class, 'edit'])->name('citas.edit');
-    Route::put('/citas/{codigocita}', [CitaController::class, 'update'])->name('citas.update');
-    Route::delete('/citas/{codigocita}', [CitaController::class, 'destroy'])->name('citas.destroy');
+    Route::get('/citas/{codigocita}/{codigopaciente}/editar', [CitaController::class, 'edit'])->name('citas.edit');
+    Route::put('/citas/{codigocita}/{codigopaciente}', [CitaController::class, 'update'])->name('citas.update');
+    Route::delete('/citas/{codigocita}/{codigopaciente}', [CitaController::class, 'destroy'])->name('citas.destroy');
     Route::get('/citas/mostrar', [CitaController::class, 'index'])->name('citas.index');
+    Route::get('/citas/{codigocita}/{codigopaciente}/consulta', [ConsultaController::class, 'create'])->name('consultas.create');
 
     // Rutas para pacientes
     Route::get('/pacientes/crear', [PacienteController::class, 'create'])->middleware('can:registrar-pacientes')->name('pacientes.create');
     Route::post('/pacientes', [PacienteController::class, 'store'])->middleware('can:registrar-pacientes')->name('pacientes.store');
     Route::get('/pacientes/mostrar', [PacienteController::class, 'index'])->name('pacientes.index');
-    //Rutas para Medicamentos
+    // Rutas para Medicamentos
     Route::get('/medicamentos/crear', [MedicamentoController::class, 'create'])->middleware('can:gestionar-altas')->name('medicamentos.create');
     Route::post('/medicamentos', [MedicamentoController::class, 'store'])->middleware('can:gestionar-altas')->name('medicamentos.store');
+    Route::get('/medicamentos/{medicamento}/editar', [MedicamentoController::class, 'edit'])->middleware('can:gestionar-altas')->name('medicamentos.edit');
+    Route::put('/medicamentos/{medicamento}', [MedicamentoController::class, 'update'])->middleware('can:gestionar-altas')->name('medicamentos.update');
     Route::get('/medicamentos/mostrar', [MedicamentoController::class, 'index'])->name('medicamentos.index');
+
+    Route::post('/consultas', [ConsultaController::class, 'store'])->name('consultas.store');
+    Route::get('/consultas/{consulta}', [ConsultaController::class, 'show'])->name('consultas.show');
+    Route::get('/consultas/{consulta}/receta', [ConsultaController::class, 'download'])->name('consultas.receta');
 
 });
 

@@ -65,6 +65,7 @@
             @if ($cita)
                 <a class="button button-secondary" href="{{ route('citas.create') }}">Nueva cita</a>
             @endif
+            @include('components.management-actions')
         </header>
 
         <div class="appointment-content">

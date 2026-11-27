@@ -40,7 +40,7 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure authentication against administrator and employee records.
+     * Authenticate accounts across their separate legacy tables.
      */
     private function configureAuthentication(): void
     {
@@ -57,7 +57,22 @@ class FortifyServiceProvider extends ServiceProvider
                 return null;
             }
 
-            foreach ([Administrador::class, EMPLEADO::class, Doctor::class] as $model) {
+            $models = [
+                'administrador' => Administrador::class,
+                'empleado' => EMPLEADO::class,
+                'doctor' => Doctor::class,
+            ];
+            $tipoCuenta = $request->input('tipo_cuenta');
+
+            if ($tipoCuenta !== null && (! is_string($tipoCuenta) || ! isset($models[$tipoCuenta]))) {
+                return null;
+            }
+
+            $candidates = $tipoCuenta === null
+                ? array_values($models)
+                : [$models[$tipoCuenta]];
+
+            foreach ($candidates as $model) {
                 $user = $model::query()
                     ->where(function ($query) use ($nombre): void {
                         $query->where('nombre', $nombre);
@@ -68,7 +83,7 @@ class FortifyServiceProvider extends ServiceProvider
                     })
                     ->first();
                 $storedPassword = $user?->getAttribute('contraseña');
-                
+
                 if (! is_string($storedPassword)) {
                     continue;
                 }

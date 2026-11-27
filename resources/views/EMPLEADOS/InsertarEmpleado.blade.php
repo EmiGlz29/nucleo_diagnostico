@@ -39,6 +39,7 @@
                 <h1>Agregar empleado</h1>
                 <p class="page-description">Completa los datos personales y laborales del empleado.</p>
             </div>
+            @include('components.management-actions')
         </header>
 
         <section class="panel">

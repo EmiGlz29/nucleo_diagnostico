@@ -39,6 +39,7 @@
                 <h1>Agregar paciente</h1>
                 <p class="page-description">Registra los datos personales y medidas del paciente.</p>
             </div>
+            @include('components.management-actions')
         </header>
 
         <section class="panel">

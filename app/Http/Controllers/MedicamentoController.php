@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Medicamento;
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreMedicamentoRequest;
 use App\Http\Requests\UpdateMedicamentoRequest;
+use App\Models\Medicamento;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class MedicamentoController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
-        $medicamentos = Medicamento::all();
+        $medicamentos = Medicamento::query()->orderBy('nombre_med')->get();
+
         return view('MEDICAMENTOS.MostrarMedicamento', compact('medicamentos'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
         return view('MEDICAMENTOS.InsertarMedicamento');
     }
@@ -30,44 +31,24 @@ class MedicamentoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreMedicamentoRequest $request)
+    public function store(StoreMedicamentoRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
-        $medicamento = Medicamento::create($validated);
-        return redirect()->route('medicamentos.index');
-        return redirect()->route('menu-principal')
-            ->with('success', 'Medicamento '.$medicamento->nombre_med.' agregado exitosamente.');
+        $medicamento = Medicamento::create($request->validated());
+
+        return redirect()->route('medicamentos.index')
+            ->with('success', 'Medicamento '.$medicamento->nombre_med.' agregado correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Medicamento $medicamento)
+    public function edit(Medicamento $medicamento): View
     {
-        return view('MEDICAMENTOS.MostrarMedicamento', ['medicamento' => $medicamento]);
+        return view('MEDICAMENTOS.EditarMedicamento', compact('medicamento'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Medicamento $medicamento)
+    public function update(UpdateMedicamentoRequest $request, Medicamento $medicamento): RedirectResponse
     {
-        //
-    }
+        $medicamento->update($request->validated());
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateMedicamentoRequest $request, Medicamento $medicamento)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Medicamento $medicamento)
-    {
-        //
+        return redirect()->route('medicamentos.index')
+            ->with('success', 'Medicamento actualizado correctamente.');
     }
 }

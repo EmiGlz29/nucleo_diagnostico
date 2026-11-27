@@ -46,7 +46,27 @@
                 <h1>Pacientes</h1>
                 <p class="page-description">{{ $pacientes->count() }} {{ $pacientes->count() === 1 ? 'registro' : 'registros' }} en el directorio.</p>
             </div>
+            @include('components.management-actions')
         </header>
+
+        @if (Auth::user() instanceof \App\Models\Doctor)
+            @if ($proximaCita)
+                <section class="panel">
+                    <p class="eyebrow">Próxima cita · {{ $proximaCita->fechacita }} · {{ substr((string) $proximaCita->hora, 0, 5) }}</p>
+                    <h2>{{ $proximaCita->paciente->nombre }}</h2>
+                    <p><strong>Código:</strong> {{ $proximaCita->paciente->codigo }}</p>
+                    <p><strong>Dirección:</strong> {{ $proximaCita->paciente->direccion }}</p>
+                    <p><strong>Teléfono:</strong> {{ $proximaCita->paciente->telefono }}</p>
+                    <p><strong>Fecha de nacimiento:</strong> {{ $proximaCita->paciente->fecha_nac }}</p>
+                    <p><strong>Sexo:</strong> {{ $proximaCita->paciente->sexo }}</p>
+                    <p><strong>Edad:</strong> {{ $proximaCita->paciente->edad }}</p>
+                    <p><strong>Estatura:</strong> {{ $proximaCita->paciente->estatura }}</p>
+                    <a class="button button-primary" href="{{ route('consultas.create', [$proximaCita->codigocita, $proximaCita->codigopaciente]) }}">Iniciar consulta</a>
+                </section>
+            @else
+                <div class="success-banner" role="status">No tienes próximas citas asignadas.</div>
+            @endif
+        @endif
 
         <div class="table-wrap">
             <table class="data-table">
@@ -59,7 +79,7 @@
                         <th scope="col">Fecha de nacimiento</th>
                         <th scope="col">Sexo</th>
                         <th scope="col">Edad</th>
-                        <th scope="col">Estatura (cm)</th>
+                        <th scope="col">Estatura</th>
                     </tr>
                 </thead>
                 <tbody>

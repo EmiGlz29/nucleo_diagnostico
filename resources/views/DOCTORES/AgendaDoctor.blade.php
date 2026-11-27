@@ -38,7 +38,10 @@
                 <p class="eyebrow">Núcleo de Diagnóstico</p>
                 <h1>Agenda del doctor {{ $doctor->nombre }}</h1>
             </div>
-            <a class="button button-secondary" href="{{ route('doctores.index') }}">Volver a doctores</a>
+            <div class="page-actions">
+                <a class="button button-secondary" href="{{ route('doctores.index') }}">Volver a doctores</a>
+                @include('components.management-actions')
+            </div>
         </header>
 
         <nav class="button-group agenda-navigation" aria-label="Cambiar semana">

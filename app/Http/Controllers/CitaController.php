@@ -22,9 +22,15 @@ class CitaController extends Controller
 
     private const SQL_AGENDA = 'SELECT c.codigocita, c.codigopaciente, c.codigodoctor, c.fechacita, c.hora, p.nombre AS paciente FROM "Cita" c JOIN "Paciente" p ON p.codigo = c.codigopaciente WHERE c.codigodoctor = ? AND c.fechacita BETWEEN ? AND ? ORDER BY c.fechacita, c.hora';
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        $citas = Cita::with(['paciente', 'doctor', 'empleado'])->orderBy('fechacita', 'desc')->get();
+        $query = Cita::query()->with(['paciente', 'doctor']);
+
+        if ($request->user() instanceof Doctor) {
+            $query->where('codigodoctor', $request->user()->getAuthIdentifier());
+        }
+
+        $citas = $query->orderByDesc('fechacita')->orderBy('hora')->get();
 
         return view('CITAS.MostrarCitas', compact('citas'));
     }
@@ -34,20 +40,25 @@ class CitaController extends Controller
         return $this->form();
     }
 
-    public function edit(string $codigocita): View
+    public function edit(string $codigocita, string $codigopaciente): View
     {
         return view('CITAS.ModificarCitas', [
-            'cita' => Cita::query()->findOrFail($codigocita),
+            'cita' => $this->findCita($codigocita, $codigopaciente),
             'doctores' => Doctor::query()->orderBy('nombre')->get(['codigo', 'nombre']),
         ]);
     }
 
-    public function destroy(string $codigocita): RedirectResponse
-{
-    DB::delete('DELETE FROM "cita" WHERE codigocita = ?', [$codigocita]);
+    public function destroy(string $codigocita, string $codigopaciente): RedirectResponse
+    {
+        $deleted = DB::delete(
+            'DELETE FROM "Cita" WHERE codigocita = ? AND codigopaciente = ?',
+            [$codigocita, $codigopaciente],
+        );
 
-    return redirect()->route('citas.create')->with('success', 'La cita se eliminó correctamente.');
-}
+        abort_unless($deleted === 1, 404);
+
+        return redirect()->route('citas.index')->with('success', 'La cita se eliminó correctamente.');
+    }
 
     public function agenda(Request $request): JsonResponse
     {
@@ -64,65 +75,64 @@ class CitaController extends Controller
             return response()->json(['message' => 'El periodo de consulta no puede superar 42 días.'], 422);
         }
 
-        $bindings = [
+        $citas = DB::select(self::SQL_AGENDA, [
             (int) $validated['codigodoctor'],
             $start->toDateString(),
             $end->toDateString(),
-        ];
-        $citas = DB::select(self::SQL_AGENDA, $bindings);
-
-        return response()->json([
-            'citas' => $citas,
         ]);
+
+        return response()->json(['citas' => $citas]);
     }
 
     public function store(Request $request): RedirectResponse
     {
-        abort_unless($request->user() instanceof EMPLEADO || $request->user() instanceof Doctor, 403, 'Solo los empleados y doctores pueden registrar citas.');
+        abort_unless(
+            $request->user() instanceof EMPLEADO || $request->user() instanceof Doctor,
+            403,
+            'Solo los empleados y doctores pueden registrar citas.',
+        );
 
         return $this->save($request);
     }
 
-    public function update(Request $request, string $codigocita): RedirectResponse
+    public function update(Request $request, string $codigocita, string $codigopaciente): RedirectResponse
     {
-        $current = Cita::query()->findOrFail($codigocita);
-
-        return $this->save($request, $current);
+        return $this->save($request, $this->findCita($codigocita, $codigopaciente));
     }
 
-    private function form(?Cita $cita = null): View
+    private function form(): View
     {
         $maxCode = (int) DB::table('Cita')->max('codigocita');
 
         return view('CITAS.Agenda', [
             'doctores' => Doctor::query()->orderBy('nombre')->get(['codigo', 'nombre', 'especialidad']),
             'pacientes' => Paciente::query()->orderBy('nombre')->get(['codigo', 'nombre']),
-            'cita' => $cita,
+            'cita' => null,
             'nextCode' => $maxCode < 2147483647 ? $maxCode + 1 : null,
             'minAppointmentDate' => self::MIN_APPOINTMENT_DATE,
         ]);
     }
 
+    private function findCita(string|int $codigocita, string|int $codigopaciente): Cita
+    {
+        return Cita::query()
+            ->with(['paciente', 'doctor'])
+            ->where('codigocita', $codigocita)
+            ->where('codigopaciente', $codigopaciente)
+            ->firstOrFail();
+    }
+
     private function save(Request $request, ?Cita $current = null): RedirectResponse
     {
-        $statement = $current
-            ? 'UPDATE "Cita" SET codigocita = ?, codigopaciente = ?, codigodoctor = ?, fechacita = ?, hora = ? WHERE codigocita = ?'
-            : 'INSERT INTO "Cita" (codigocita, codigopaciente, codigodoctor, fechacita, hora, codigoempleado) VALUES (?, ?, ?, ?, ?, ?)';
-        $codeRule = Rule::unique('Cita', 'codigocita');
-
-        if ($current) {
-            $codeRule->ignore($current->codigocita, 'codigocita');
+        $input = $request->all();
+        foreach (['codigocita', 'codigopaciente', 'codigodoctor', 'fechacita', 'hora'] as $field) {
+            if (is_string($input[$field] ?? null)) {
+                $input[$field] = trim($input[$field]);
+            }
         }
 
-        $validator = Validator::make($request->all(), [
-            'codigocita' => [
-                'bail',
-                'required',
-                'integer',
-                'min:1',
-                'max:2147483647',
-                $codeRule,
-            ],
+        $validator = Validator::make($input, [
+            'codigocita' => ['bail', 'required', 'integer', 'min:1', 'max:2147483647'],
             'codigopaciente' => ['bail', 'required', 'integer', Rule::exists('Paciente', 'codigo')],
             'codigodoctor' => ['bail', 'required', 'integer', Rule::exists('Doctor', 'codigo')],
             'fechacita' => ['required', 'date_format:Y-m-d'],
@@ -137,6 +147,19 @@ class CitaController extends Controller
         }
 
         $data = $validator->validated();
+        $sameCompositeKey = $current !== null
+            && (string) $current->codigocita === (string) $data['codigocita']
+            && (string) $current->codigopaciente === (string) $data['codigopaciente'];
+
+        if (! $sameCompositeKey && DB::table('Cita')
+            ->where('codigocita', $data['codigocita'])
+            ->where('codigopaciente', $data['codigopaciente'])
+            ->exists()) {
+            return back()->withErrors([
+                'codigocita' => 'Ya existe una cita con esa combinación de código y paciente.',
+            ])->withInput();
+        }
+
         $date = CarbonImmutable::parse($data['fechacita']);
 
         if ($date->toDateString() < self::MIN_APPOINTMENT_DATE) {
@@ -152,18 +175,28 @@ class CitaController extends Controller
 
         if ($data['hora'] >= '14:00' && $data['hora'] < '16:00') {
             return back()->withErrors([
-                'hora' => 'No se puede registrar la cita: horario de comida del doctor (2:00 PM a 4:00 PM)',
+                'hora' => 'No se puede registrar la cita durante el horario de comida (14:00 a 16:00).',
             ])->withInput();
         }
 
-        $conflict = $this->findConflict($data, $current?->codigocita);
-
+        $conflict = $this->findConflict($data, $current);
         if ($conflict !== null) {
-            return back()->withErrors([$conflict['field'] => $conflict['message']])
-                ->withInput();
+            return back()->withErrors([$conflict['field'] => $conflict['message']])->withInput();
         }
 
-        $bindings = $this->writeBindings($data, $current, $request);
+        $statement = $current
+            ? 'UPDATE "Cita" SET codigocita = ?, codigopaciente = ?, codigodoctor = ?, fechacita = ?, hora = ? WHERE codigocita = ? AND codigopaciente = ?'
+            : 'INSERT INTO "Cita" (codigocita, codigopaciente, codigodoctor, fechacita, hora) VALUES (?, ?, ?, ?, ?)';
+        $values = [
+            (int) $data['codigocita'],
+            (int) $data['codigopaciente'],
+            (int) $data['codigodoctor'],
+            $data['fechacita'],
+            $data['hora'],
+        ];
+        $bindings = $current
+            ? [...$values, $current->codigocita, $current->codigopaciente]
+            : $values;
 
         try {
             DB::transaction(function () use ($statement, $bindings, $current): void {
@@ -178,16 +211,9 @@ class CitaController extends Controller
                 throw $exception;
             }
 
-            $conflict = $this->findConflict($data, $current?->codigocita);
-
-            if ($conflict === null) {
-                return back()->withErrors([
-                    'codigocita' => 'El código de cita ya fue utilizado por otra solicitud.',
-                ])->withInput();
-            }
-
-            return back()->withErrors([$conflict['field'] => $conflict['message']])
-                ->withInput();
+            return back()->withErrors([
+                'codigocita' => 'Ya existe una cita con esa combinación de código y paciente.',
+            ])->withInput();
         }
 
         $message = $current ? 'La cita se reprogramó correctamente.' : 'La cita se registró correctamente.';
@@ -195,17 +221,17 @@ class CitaController extends Controller
         return redirect()->route('citas.create')->with('success', $message);
     }
 
-    private function findConflict(array $data, int|string|null $currentCode): ?array
+    private function findConflict(array $data, ?Cita $current): ?array
     {
-        $selfExclusion = $currentCode === null ? '' : ' AND c.codigocita <> ?';
-        $suffixBindings = $currentCode === null ? [] : [$currentCode];
+        $selfExclusion = $current === null ? '' : ' AND NOT (c.codigocita = ? AND c.codigopaciente = ?)';
+        $suffixBindings = $current === null ? [] : [$current->codigocita, $current->codigopaciente];
         $doctorSql = 'SELECT c.codigocita FROM "Cita" c WHERE c.codigodoctor = ? AND c.fechacita = ? AND c.hora = ?'.$selfExclusion;
         $doctorBindings = [(int) $data['codigodoctor'], $data['fechacita'], $data['hora'], ...$suffixBindings];
 
         if (DB::selectOne($doctorSql, $doctorBindings)) {
             return [
                 'field' => 'hora',
-                'message' => 'No se puede registrar la cita: el doctor ya tiene una cita registrada en ese horario',
+                'message' => 'El doctor ya tiene una cita registrada en ese horario.',
             ];
         }
 
@@ -220,23 +246,10 @@ class CitaController extends Controller
         if (DB::selectOne($patientSql, $patientBindings)) {
             return [
                 'field' => 'codigopaciente',
-                'message' => 'No se puede registrar la cita: el paciente ya tiene otra cita agendada en esa misma fecha y hora con otro doctor',
+                'message' => 'El paciente ya tiene una cita agendada en esa fecha y hora.',
             ];
         }
-     
+
         return null;
-    }
-
-    private function writeBindings(array $data, ?Cita $current, Request $request): array
-    {
-        $values = [
-            (int) $data['codigocita'],
-            (int) $data['codigopaciente'],
-            (int) $data['codigodoctor'],
-            $data['fechacita'],
-            $data['hora'],
-        ];
-
-        return $current ? [...$values, $current->codigocita] : [...$values, $request->user()->getAuthIdentifier()];
     }
 }
