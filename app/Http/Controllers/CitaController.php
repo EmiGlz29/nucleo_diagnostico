@@ -87,9 +87,9 @@ class CitaController extends Controller
     public function store(Request $request): RedirectResponse
     {
         abort_unless(
-            $request->user() instanceof EMPLEADO || $request->user() instanceof Doctor,
+            $request->user() instanceof EMPLEADO,
             403,
-            'Solo los empleados y doctores pueden registrar citas.',
+            'Solo los empleados pueden registrar citas.',
         );
 
         return $this->save($request);
@@ -186,7 +186,7 @@ class CitaController extends Controller
 
         $statement = $current
             ? 'UPDATE "Cita" SET codigocita = ?, codigopaciente = ?, codigodoctor = ?, fechacita = ?, hora = ? WHERE codigocita = ? AND codigopaciente = ?'
-            : 'INSERT INTO "Cita" (codigocita, codigopaciente, codigodoctor, fechacita, hora) VALUES (?, ?, ?, ?, ?)';
+            : 'INSERT INTO "Cita" (codigocita, codigopaciente, codigodoctor, fechacita, hora, codigoempleado) VALUES (?, ?, ?, ?, ?, ?)';
         $values = [
             (int) $data['codigocita'],
             (int) $data['codigopaciente'],
@@ -196,7 +196,7 @@ class CitaController extends Controller
         ];
         $bindings = $current
             ? [...$values, $current->codigocita, $current->codigopaciente]
-            : $values;
+            : [...$values, $request->user()->getAuthIdentifier()];
 
         try {
             DB::transaction(function () use ($statement, $bindings, $current): void {

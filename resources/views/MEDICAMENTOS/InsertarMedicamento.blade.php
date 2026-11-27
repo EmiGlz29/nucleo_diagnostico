@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{{ asset('management.css') }}">
 </head>
 <body>
+    @include('components.medicamentos-sidebar')
+
     <main class="container">
         <header class="page-header">
             <div>

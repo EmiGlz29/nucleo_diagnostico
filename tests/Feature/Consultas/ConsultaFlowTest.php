@@ -87,7 +87,7 @@ function logInAsDoctorForConsultaFlow($test): void
     $test->get(route('menu-principal'))->assertOk();
 }
 
-test('doctor only sees their appointments and the next patient', function () {
+test('doctor sees their appointments and all patients', function () {
     logInAsDoctorForConsultaFlow($this);
 
     $this->get(route('citas.index'))
@@ -101,9 +101,20 @@ test('doctor only sees their appointments and the next patient', function () {
         ->assertSee('Próxima cita')
         ->assertSee('Iniciar consulta')
         ->assertSee('PACIENTE UNO')
-        ->assertDontSee('PACIENTE DOS');
+        ->assertSee('PACIENTE DOS');
 
     $this->get(route('consultas.create', [22, 12]))->assertForbidden();
+});
+
+test('doctor sees all patients without an upcoming appointment', function () {
+    DB::table('Cita')->where('codigodoctor', 3)->delete();
+    logInAsDoctorForConsultaFlow($this);
+
+    $this->get(route('pacientes.index'))
+        ->assertOk()
+        ->assertSee('No tienes próximas citas asignadas.')
+        ->assertSee('PACIENTE UNO')
+        ->assertSee('PACIENTE DOS');
 });
 
 test('administrator sees appointments for every doctor', function () {

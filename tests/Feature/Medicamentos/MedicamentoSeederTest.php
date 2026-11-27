@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Administrador;
+use App\Models\EMPLEADO;
 use App\Models\Medicamento;
 use Database\Seeders\MedicamentoSeeder;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,8 @@ test('administrator can create and update trimmed medication fields', function (
         ->get(route('medicamentos.create'))
         ->assertOk()
         ->assertSee('Registrar medicamento')
+        ->assertSee('<nav class="sidebar" aria-label="Navegación principal">', false)
+        ->assertSee('Agregar medicamento</a>', false)
         ->assertSee('Cerrar Sesión');
 
     $this->post(route('medicamentos.store'), [
@@ -47,6 +50,8 @@ test('administrator can create and update trimmed medication fields', function (
     $this->get(route('medicamentos.index'))
         ->assertOk()
         ->assertSee('PARACETAMOL PRUEBA')
+        ->assertSee('<nav class="sidebar" aria-label="Navegación principal">', false)
+        ->assertSee('href="'.route('citas.create').'"', false)
         ->assertSee('Volver al Menú Principal');
 
     $this->put(route('medicamentos.update', $medicamento), [
@@ -58,4 +63,25 @@ test('administrator can create and update trimmed medication fields', function (
     ])->assertRedirect(route('medicamentos.index'));
 
     expect($medicamento->fresh()->nombre_med)->toBe('AMOXICILINA PRUEBA');
+});
+
+test('employees see the medication sidebar without administration links', function () {
+    DB::table('Empleado')->insert([
+        'codigo' => 1,
+        'nombre' => 'EMPLEADO PRUEBA',
+        'direccion' => 'CALLE UNO',
+        'telefono' => '3311111111',
+        'fecha_nac' => '1990-01-01',
+        'sexo' => 'FEMENINO',
+        'salario' => 1000,
+        'turno' => 'MATUTINO',
+        'contraseña' => 'clave',
+    ]);
+
+    $this->actingAs(EMPLEADO::query()->findOrFail(1))
+        ->get(route('medicamentos.index'))
+        ->assertOk()
+        ->assertSee('<nav class="sidebar" aria-label="Navegación principal">', false)
+        ->assertSee('Hola,')
+        ->assertDontSee('href="'.route('medicamentos.create').'"', false);
 });

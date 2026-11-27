@@ -36,12 +36,9 @@ class PacienteController extends Controller
                 ->orderBy('hora')
                 ->first();
 
-            $pacientes = $proximaCita === null
-                ? collect()
-                : collect([$proximaCita->paciente]);
-        } else {
-            $pacientes = Paciente::query()->orderBy('nombre')->get();
         }
+
+        $pacientes = Paciente::query()->orderBy('nombre')->get();
 
         return view('PACIENTES.MostrarPaciente', compact('pacientes', 'proximaCita'));
     }

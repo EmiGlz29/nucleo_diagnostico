@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Administrador;
+use App\Models\Doctor;
 use App\Models\EMPLEADO;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Schema\Blueprint;
@@ -48,6 +49,10 @@ beforeEach(function () {
 
     $migration = require database_path('migrations/2026_11_24_000000_create_cita_table.php');
     $migration->up();
+    Schema::table('Cita', function (Blueprint $table) {
+        $table->integer('codigoempleado');
+        $table->foreign('codigoempleado')->references('codigo')->on('Empleado');
+    });
     $this->actingAs(EMPLEADO::query()->findOrFail(1));
 });
 
@@ -67,14 +72,21 @@ function citaPayload(array $overrides = []): array
     ], $overrides);
 }
 
-test('employees register appointments with the real five-column schema', function () {
+test('appointments are associated with the authenticated employee, not the submitted code', function () {
     $this->get(route('citas.create'))->assertOk()->assertSee('Agenda médica');
 
     $this->post(route('citas.store'), citaPayload(['codigoempleado' => 999]))
         ->assertRedirect(route('citas.create'))->assertSessionHasNoErrors();
-    $this->assertDatabaseHas('Cita', ['codigocita' => 1, 'codigopaciente' => 20, 'codigodoctor' => 10]);
-    expect(Schema::hasColumn('Cita', 'codigoempleado'))->toBeFalse();
+    $this->assertDatabaseHas('Cita', ['codigocita' => 1, 'codigopaciente' => 20, 'codigodoctor' => 10, 'codigoempleado' => 1]);
     $this->get(route('citas.create'))->assertSee('value="2"', false);
+});
+
+test('doctors cannot register appointments even when their code matches an employee', function () {
+    DB::table('Doctor')->insert(['codigo' => 1, 'nombre' => 'Doctor']);
+    $this->actingAs(Doctor::query()->findOrFail(1));
+    $this->get(route('citas.create'))->assertSee('Solo los empleados pueden registrar citas.');
+    $this->post(route('citas.store'), citaPayload())->assertForbidden();
+    $this->assertDatabaseCount('Cita', 0);
 });
 
 test('administrators cannot register appointments even when their code matches an employee', function () {
@@ -101,9 +113,11 @@ test('meal break and conflicting appointments are rejected', function () {
 test('appointments can be edited using their composite key and appear in the agenda', function () {
     $this->post(route('citas.store'), citaPayload())->assertSessionHasNoErrors();
     $this->get(route('citas.edit', [1, 20]))->assertOk();
-    $this->put(route('citas.update', [1, 20]), citaPayload(['hora' => '10:00']))
+    DB::table('Empleado')->insert(['codigo' => 2, 'nombre' => 'OTRO EMPLEADO', 'contraseña' => 'password']);
+    $this->actingAs(EMPLEADO::query()->findOrFail(2));
+    $this->put(route('citas.update', [1, 20]), citaPayload(['hora' => '10:00', 'codigoempleado' => 2]))
         ->assertSessionHasNoErrors();
-    $this->assertDatabaseHas('Cita', ['codigocita' => 1, 'codigopaciente' => 20, 'hora' => '10:00']);
+    $this->assertDatabaseHas('Cita', ['codigocita' => 1, 'codigopaciente' => 20, 'hora' => '10:00', 'codigoempleado' => 1]);
     $this->put(route('citas.update', [1, 20]), citaPayload(['fechacita' => '2026-11-20']))
         ->assertSessionHasErrors('fechacita');
     $this->get(route('citas.agenda', ['codigodoctor' => 10, 'fecha' => nextWeekday()]))
