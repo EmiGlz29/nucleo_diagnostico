@@ -42,6 +42,13 @@ class CitaController extends Controller
         ]);
     }
 
+    public function destroy(string $codigocita): RedirectResponse
+{
+    DB::delete('DELETE FROM "cita" WHERE codigocita = ?', [$codigocita]);
+
+    return redirect()->route('citas.create')->with('success', 'La cita se eliminó correctamente.');
+}
+
     public function agenda(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -216,7 +223,7 @@ class CitaController extends Controller
                 'message' => 'No se puede registrar la cita: el paciente ya tiene otra cita agendada en esa misma fecha y hora con otro doctor',
             ];
         }
-
+     
         return null;
     }
 
