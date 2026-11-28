@@ -9,40 +9,37 @@ class Consulta extends Model
 {
     protected $table = 'Consulta';
 
-    protected $primaryKey = 'codigoconsulta';
+    protected $primaryKey = 'codigo';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'codigocita',
-        'codigopaciente',
-        'codigodoctor',
+        'codigo_cita',
+        'codigo_paciente',
+        'codigo_doctor',
         'diagnostico',
-        'codigo_medicamento',
+        'codigo_med',
         'dias_tratamiento',
         'horario_suministro',
-        'fecha_consulta',
     ];
 
     protected function casts(): array
     {
-        return [
-            'fecha_consulta' => 'datetime',
-        ];
+        return [];
     }
 
     public function paciente(): BelongsTo
     {
-        return $this->belongsTo(Paciente::class, 'codigopaciente', 'codigo');
+        return $this->belongsTo(Paciente::class, 'codigo_paciente', 'codigo');
     }
 
     public function doctor(): BelongsTo
     {
-        return $this->belongsTo(Doctor::class, 'codigodoctor', 'codigo');
+        return $this->belongsTo(Doctor::class, 'codigo_doctor', 'codigo');
     }
 
     public function medicamento(): BelongsTo
     {
-        return $this->belongsTo(Medicamento::class, 'codigo_medicamento', 'codigo');
+        return $this->belongsTo(Medicamento::class, 'codigo_med', 'codigo');
     }
 }

@@ -45,6 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/medicamentos/{medicamento}', [MedicamentoController::class, 'update'])->middleware('can:gestionar-altas')->name('medicamentos.update');
     Route::get('/medicamentos/mostrar', [MedicamentoController::class, 'index'])->name('medicamentos.index');
 
+    Route::get('/consultas', [ConsultaController::class, 'index'])->name('consultas.index');
     Route::post('/consultas', [ConsultaController::class, 'store'])->name('consultas.store');
     Route::get('/consultas/{consulta}', [ConsultaController::class, 'show'])->name('consultas.show');
     Route::get('/consultas/{consulta}/receta', [ConsultaController::class, 'download'])->name('consultas.receta');

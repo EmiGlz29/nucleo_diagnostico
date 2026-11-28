@@ -11,7 +11,7 @@
         <header class="page-header">
             <div>
                 <p class="eyebrow">Consulta registrada</p>
-                <h1>Detalle de la consulta #{{ $consulta->codigoconsulta }}</h1>
+                <h1>Detalle de la consulta #{{ $consulta->codigo }}</h1>
                 <p class="page-description">La consulta quedó asociada a la cita #{{ $cita->codigocita }}.</p>
             </div>
             @include('components.management-actions')
@@ -41,7 +41,6 @@
                 <p><strong>Días:</strong> {{ $consulta->dias_tratamiento }}</p>
                 <p><strong>Horario:</strong> {{ $consulta->horario_suministro }}</p>
                 <p><strong>Doctor:</strong> {{ $consulta->doctor->nombre }} ({{ $consulta->doctor->codigo }})</p>
-                <p><strong>Fecha de consulta:</strong> {{ $consulta->fecha_consulta->format('d/m/Y H:i') }}</p>
             </div>
             <div class="button-group">
                 <a href="{{ route('consultas.receta', $consulta) }}" class="button button-primary">GENERAR RECETA</a>

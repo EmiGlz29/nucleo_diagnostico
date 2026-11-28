@@ -148,7 +148,7 @@ test('doctor saves a sanitized consultation and downloads receta.pdf', function 
     $response = $this->post(route('consultas.store'), [
         'codigocita' => ' 21 ',
         'codigopaciente' => ' 11 ',
-        'codigo_medicamento' => ' 1 ',
+        'codigo_med' => ' 1 ',
         'diagnostico' => '  Diagnóstico de prueba  ',
         'dias_tratamiento' => ' 5 ',
         'horario_suministro' => ' Cada 8 horas ',

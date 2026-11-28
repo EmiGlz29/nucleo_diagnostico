@@ -26,12 +26,12 @@ return new class extends Migration
 
         if (Schema::hasTable('Consulta')) {
             foreach ([
-                'codigoconsulta',
-                'codigocita',
-                'codigopaciente',
-                'codigodoctor',
+                'codigo',
+                'codigo_cita',
+                'codigo_paciente',
+                'codigo_doctor',
                 'diagnostico',
-                'codigo_medicamento',
+                'codigo_med',
                 'dias_tratamiento',
                 'horario_suministro',
                 'fecha_consulta',
@@ -45,26 +45,26 @@ return new class extends Migration
         }
 
         Schema::create('Consulta', function (Blueprint $table): void {
-            $table->increments('codigoconsulta');
-            $table->integer('codigocita');
-            $table->integer('codigopaciente');
-            $table->integer('codigodoctor');
+            $table->increments('codigo');
+            $table->integer('codigo_cita');
+            $table->integer('codigo_paciente');
+            $table->integer('codigo_doctor');
             $table->text('diagnostico');
-            $table->integer('codigo_medicamento');
+            $table->integer('codigo_med');
             $table->unsignedSmallInteger('dias_tratamiento');
             $table->string('horario_suministro', 255);
             $table->timestamp('fecha_consulta')->useCurrent();
 
-            $table->foreign(['codigocita', 'codigopaciente'])
+            $table->foreign(['codigo_cita', 'codigo_paciente'])
                 ->references(['codigocita', 'codigopaciente'])
                 ->on('Cita')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
-            $table->foreign('codigodoctor')
+            $table->foreign('codigo_doctor')
                 ->references('codigo')->on('Doctor')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
-            $table->foreign('codigo_medicamento')
+            $table->foreign('codigo_med')
                 ->references('codigo')->on('Medicamento')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();

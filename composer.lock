@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6068ff1c25c18a562a8b88b658120c6a",
+    "content-hash": "85b21d55f6e2cf918707e6e3e7a23704",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -136,8 +136,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-21T08:51:10+00:00",
-            "published-time": "2026-03-17T15:52:42+00:00"
+            "time": "2026-02-21T08:51:10+00:00"
         },
         {
             "name": "brick/math",
@@ -673,8 +672,7 @@
                 "issues": "https://github.com/dompdf/dompdf/issues",
                 "source": "https://github.com/dompdf/dompdf/tree/v3.1.6"
             },
-            "time": "2026-07-20T12:29:38+00:00",
-            "published-time": "2026-07-20T12:35:08+00:00"
+            "time": "2026-07-20T12:29:38+00:00"
         },
         {
             "name": "dompdf/php-font-lib",
@@ -719,8 +717,7 @@
                 "issues": "https://github.com/dompdf/php-font-lib/issues",
                 "source": "https://github.com/dompdf/php-font-lib/tree/1.0.2"
             },
-            "time": "2026-01-20T14:10:26+00:00",
-            "published-time": "2026-01-20T14:14:50+00:00"
+            "time": "2026-01-20T14:10:26+00:00"
         },
         {
             "name": "dompdf/php-svg-lib",
@@ -766,8 +763,7 @@
                 "issues": "https://github.com/dompdf/php-svg-lib/issues",
                 "source": "https://github.com/dompdf/php-svg-lib/tree/1.0.2"
             },
-            "time": "2026-01-02T16:01:13+00:00",
-            "published-time": "2026-01-02T16:02:22+00:00"
+            "time": "2026-01-02T16:01:13+00:00"
         },
         {
             "name": "dragonmantank/cron-expression",
@@ -2883,8 +2879,7 @@
                 "issues": "https://github.com/Masterminds/html5-php/issues",
                 "source": "https://github.com/Masterminds/html5-php/tree/2.12.0"
             },
-            "time": "2026-10-25T08:57:58+00:00",
-            "published-time": "2026-10-25T08:58:48+00:00"
+            "time": "2026-10-25T08:57:58+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -4556,8 +4551,7 @@
                 "issues": "https://github.com/MyIntervals/PHP-CSS-Parser/issues",
                 "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v9.5.0"
             },
-            "time": "2026-09-20T15:02:00+00:00",
-            "published-time": "2026-09-20T15:20:25+00:00"
+            "time": "2026-09-20T15:02:00+00:00"
         },
         {
             "name": "spomky-labs/cbor-php",
@@ -12237,5 +12231,5 @@
         "php": "^8.3"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.11.0"
+    "plugin-api-version": "2.9.0"
 }

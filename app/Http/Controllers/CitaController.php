@@ -40,19 +40,19 @@ class CitaController extends Controller
         return $this->form();
     }
 
-    public function edit(string $codigocita, string $codigopaciente): View
+    public function edit(string $codigo_cita, string $codigo_paciente): View
     {
         return view('CITAS.ModificarCitas', [
-            'cita' => $this->findCita($codigocita, $codigopaciente),
+            'cita' => $this->findCita($codigo_cita, $codigo_paciente),
             'doctores' => Doctor::query()->orderBy('nombre')->get(['codigo', 'nombre']),
         ]);
     }
 
-    public function destroy(string $codigocita, string $codigopaciente): RedirectResponse
+    public function destroy(string $codigo_cita, string $codigo_paciente): RedirectResponse
     {
         $deleted = DB::delete(
-            'DELETE FROM "Cita" WHERE codigocita = ? AND codigopaciente = ?',
-            [$codigocita, $codigopaciente],
+            'DELETE FROM "Cita" WHERE codigo_cita = ? AND codigo_paciente = ?',
+            [$codigo_cita, $codigo_paciente],
         );
 
         abort_unless($deleted === 1, 404);
@@ -95,9 +95,9 @@ class CitaController extends Controller
         return $this->save($request);
     }
 
-    public function update(Request $request, string $codigocita, string $codigopaciente): RedirectResponse
+    public function update(Request $request, string $codigo_cita, string $codigopaciente): RedirectResponse
     {
-        return $this->save($request, $this->findCita($codigocita, $codigopaciente));
+        return $this->save($request, $this->findCita($codigo_cita, $codigopaciente));
     }
 
     private function form(): View
@@ -113,28 +113,28 @@ class CitaController extends Controller
         ]);
     }
 
-    private function findCita(string|int $codigocita, string|int $codigopaciente): Cita
+    private function findCita(string|int $codigo_cita, string|int $codigo_paciente): Cita
     {
         return Cita::query()
             ->with(['paciente', 'doctor'])
-            ->where('codigocita', $codigocita)
-            ->where('codigopaciente', $codigopaciente)
+            ->where('codigo_cita', $codigo_cita)
+            ->where('codigo_paciente', $codigo_paciente)
             ->firstOrFail();
     }
 
     private function save(Request $request, ?Cita $current = null): RedirectResponse
     {
         $input = $request->all();
-        foreach (['codigocita', 'codigopaciente', 'codigodoctor', 'fechacita', 'hora'] as $field) {
+        foreach (['codigo_cita', 'codigo_paciente', 'codigo_doctor', 'fechacita', 'hora'] as $field) {
             if (is_string($input[$field] ?? null)) {
                 $input[$field] = trim($input[$field]);
             }
         }
 
         $validator = Validator::make($input, [
-            'codigocita' => ['bail', 'required', 'integer', 'min:1', 'max:2147483647'],
-            'codigopaciente' => ['bail', 'required', 'integer', Rule::exists('Paciente', 'codigo')],
-            'codigodoctor' => ['bail', 'required', 'integer', Rule::exists('Doctor', 'codigo')],
+            'codigo_cita' => ['bail', 'required', 'integer', 'min:1', 'max:2147483647'],
+            'codigo_paciente' => ['bail', 'required', 'integer', Rule::exists('Paciente', 'codigo')],
+            'codigo_doctor' => ['bail', 'required', 'integer', Rule::exists('Doctor', 'codigo')],
             'fechacita' => ['required', 'date_format:Y-m-d'],
             'hora' => ['required', Rule::in(array_map(fn (int $hour): string => sprintf('%02d:00', $hour), range(9, 19)))],
         ], [

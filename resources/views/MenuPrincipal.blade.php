@@ -528,6 +528,12 @@
             </div>
         </div>
         <div class="sidebar-item">
+            <a href="{{ route('consultas.index') }}">Consultas</a>
+            <div class="submenu">
+                <a href="{{ route('consultas.index') }}">Ver consultas</a>
+            </div>
+        </div>
+        <div class="sidebar-item">
             <a href="{{ route('medicamentos.index') }}">Medicamentos</a>
             <div class="submenu">
                                 @can('gestionar-altas')

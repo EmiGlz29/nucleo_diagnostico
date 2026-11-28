@@ -57,7 +57,6 @@
         <tr><td class="label">Doctor</td><td>{{ $consulta->doctor->nombre }}</td></tr>
         <tr><td class="label">Cédula / código</td><td>{{ $consulta->doctor->codigo }}</td></tr>
         <tr><td class="label">Especialidad</td><td>{{ $consulta->doctor->especialidad }}</td></tr>
-        <tr><td class="label">Fecha de consulta</td><td>{{ $consulta->fecha_consulta->format('d/m/Y H:i') }}</td></tr>
         <tr><td class="label">Cita</td><td>#{{ $cita->codigocita }} · {{ $cita->fechacita }} · {{ substr((string) $cita->hora, 0, 5) }}</td></tr>
     </table>
 

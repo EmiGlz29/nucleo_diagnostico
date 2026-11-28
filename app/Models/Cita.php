@@ -9,7 +9,7 @@ class Cita extends Model
 {
     protected $table = 'Cita';
 
-    protected $primaryKey = 'codigocita';
+    protected $primaryKey = 'codigo';
 
     protected $keyType = 'int';
 
@@ -18,7 +18,7 @@ class Cita extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'codigocita',
+        'codigo',
         'codigopaciente',
         'codigodoctor',
         'fechacita',

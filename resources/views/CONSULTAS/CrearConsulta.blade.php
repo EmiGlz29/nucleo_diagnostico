@@ -46,8 +46,8 @@
 
             <form action="{{ route('consultas.store') }}" method="POST">
                 @csrf
-                <input type="hidden" name="codigocita" value="{{ $cita->codigocita }}">
-                <input type="hidden" name="codigopaciente" value="{{ $cita->codigopaciente }}">
+                <input type="hidden" name="codigo_cita" value="{{ $cita->codigocita }}">
+                <input type="hidden" name="codigo_paciente" value="{{ $cita->codigopaciente }}">
 
                 <div class="form-group">
                     <label for="diagnostico">Diagnóstico e historial del paciente</label>
@@ -57,16 +57,16 @@
 
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="codigo_medicamento">Medicamento</label>
-                        <select id="codigo_medicamento" name="codigo_medicamento" required>
+                        <label for="codigo_med">Medicamento</label>
+                        <select id="codigo_med" name="codigo_med" required>
                             <option value="">Selecciona un medicamento</option>
                             @foreach ($medicamentos as $medicamento)
-                                <option value="{{ $medicamento->codigo }}" @selected((string) old('codigo_medicamento') === (string) $medicamento->codigo)>
+                                <option value="{{ $medicamento->codigo }}" @selected((string) old('codigo_med') === (string) $medicamento->codigo)>
                                     {{ $medicamento->nombre_med }} · {{ $medicamento->via_admin }} · {{ $medicamento->presentacion }}
                                 </option>
                             @endforeach
                         </select>
-                        @error('codigo_medicamento') <span class="error-message">{{ $message }}</span> @enderror
+                        @error('codigo_med') <span class="error-message">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
                         <label for="dias_tratamiento">Días de tratamiento</label>
